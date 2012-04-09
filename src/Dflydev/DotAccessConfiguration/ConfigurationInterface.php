@@ -30,11 +30,11 @@ interface ConfigurationInterface
     public function set($key, $value = null);
 
     /**
-     * Unset a key
+     * Remove a key
      * 
      * @param string $key
      */
-    public function unset($key);
+    public function remove($key);
 
     /**
      * Get the raw value for a key
@@ -50,7 +50,7 @@ interface ConfigurationInterface
      * @param string $key
      * @return ConfigurationInterface
      */
-    public function getConfiguration($key)
+    public function getConfiguration($key);
 
     /**
      * Import data into existing configuration
