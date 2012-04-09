@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true" bootstrap="tests/bootstrap.php">
+    <testsuites>
+        <testsuite name="Dot Access Configuration Test Suite">
+            <directory>./tests/Dflydev/Tests/DotAccessConfiguration</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>./src/Dflydev/DotAccessConfiguration/</directory>
+        </whitelist>
+    </filter>
+</phpunit>
