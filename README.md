@@ -1,9 +1,7 @@
-Dot Access Configuration
-========================
+Dot Access Data
+===============
 
-Given a deep data structure representing a configuration, access
-configuration by dot notation.
-
+Given a deep data structure, access data by dot notation.
 
 
 Requirements
@@ -11,11 +9,6 @@ Requirements
 
  * PHP (5.3+)
  * [dflydev/placeholder-resolver](https://github.com/dflydev/dflydev-placeholder-resolver) (1.*)
-
-
-Usage
------
-
 
 
 License
