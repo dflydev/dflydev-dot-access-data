@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Dflydev\DotAccessConfiguration;
+namespace Dflydev\DotAccessData;
 
-class Configuration implements ConfigurationInterface
+class Data implements DataInterface
 {
     /**
      * Internal representation of configuration data
@@ -74,14 +74,14 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration($key)
+    public function getData($key)
     {
         $value = $this->get($key);
         if (is_array($value) && Util::isAssoc($value)) {
-            return new Configuration($value);
+            return new Data($value);
         }
 
-        throw new \RuntimeException("Value at '$key' could not be represented as a ConfigurationInterface");
+        throw new \RuntimeException("Value at '$key' could not be represented as a DataInterface");
     }
 
     /**
@@ -95,7 +95,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function importConfiguration(ConfigurationInterface $configuration, $clobber = true)
+    public function importData(DataInterface $configuration, $clobber = true)
     {
         $this->import($configuration->export(), $clobber);
     }

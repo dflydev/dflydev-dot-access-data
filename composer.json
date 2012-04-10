@@ -1,9 +1,9 @@
 {
-    "name": "dflydev/dot-access-configuration",
+    "name": "dflydev/dot-access-data",
     "type": "library",
-    "description": "Given a deep data structure representing a configuration, access configuration by dot notation.",
+    "description": "Given a deep data structure, access data by dot notation.",
     "homepage": "https://github.com/dflydev/dot-access-configuration",
-    "keywords": ["dot", "access", "configuration", "notation", "config", "yaml"],
+    "keywords": ["dot", "access", "data", "notation", "config", "yaml", "yml"],
     "license": "New BSD License",
     "authors": [
         {
@@ -24,7 +24,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Dflydev\\DotAccessConfiguration": "src"
+            "Dflydev\\DotAccessData": "src"
         }
     },
     "extra": {

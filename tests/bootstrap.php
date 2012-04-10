@@ -10,4 +10,4 @@
  */
 
 $loader = require dirname(__DIR__).'/vendor/.composer/autoload.php';
-$loader->add('Dflydev\\Tests\\DotAccessConfiguration', 'tests');
+$loader->add('Dflydev\\Tests\\DotAccessData', 'tests');

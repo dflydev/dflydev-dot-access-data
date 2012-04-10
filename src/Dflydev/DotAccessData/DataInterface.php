@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Dflydev\DotAccessConfiguration;
+namespace Dflydev\DotAccessData;
 
-interface ConfigurationInterface
+interface DataInterface
 {
     /**
      * Append a value to a key (assumes key refers to an array value)
@@ -48,9 +48,9 @@ interface ConfigurationInterface
      * Get a configuration instance for a key
      * 
      * @param string $key
-     * @return ConfigurationInterface
+     * @return DataInterface
      */
-    public function getConfiguration($key);
+    public function getData($key);
 
     /**
      * Import data into existing configuration
@@ -63,10 +63,10 @@ interface ConfigurationInterface
     /**
      * Import data from an external configuration into existing configuration
      * 
-     * @param ConfigurationInterface $configuration
+     * @param DataInterface $configuration
      * @param bool $clobber
      */
-    public function importConfiguration(ConfigurationInterface $configuration, $clobber = true);
+    public function importData(DataInterface $configuration, $clobber = true);
 
     /**
      * Export configuration as raw data
