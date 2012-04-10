@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is a part of dflydev/dot-access-configuration.
+ * This file is a part of dflydev/dot-access-data.
  * 
  * (c) Dragonfly Development Inc.
  *
@@ -33,14 +33,14 @@ class DataTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    protected function runSampleDataTests(DataInterface $configuration)
+    protected function runSampleDataTests(DataInterface $data)
     {
-        $this->assertEquals('A', $configuration->get('a'));
-        $this->assertEquals('B', $configuration->get('b.b'));
-        $this->assertEquals(array('C1', 'C2', 'C3'), $configuration->get('b.c'));
-        $this->assertEquals('D3', $configuration->get('b.d.d3'));
-        $this->assertEquals(array('c1', 'c2', 'c3'), $configuration->get('c'));
-        $this->assertEquals(null, $configuration->get('foo'), 'Foo should not exist');
+        $this->assertEquals('A', $data->get('a'));
+        $this->assertEquals('B', $data->get('b.b'));
+        $this->assertEquals(array('C1', 'C2', 'C3'), $data->get('b.c'));
+        $this->assertEquals('D3', $data->get('b.d.d3'));
+        $this->assertEquals(array('c1', 'c2', 'c3'), $data->get('c'));
+        $this->assertEquals(null, $data->get('foo'), 'Foo should not exist');
     }
 
     public function testAppend()
@@ -60,9 +60,9 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $configuration = new Data($this->getSampleData());
+        $data = new Data($this->getSampleData());
 
-        $this->runSampleDataTests($configuration);
+        $this->runSampleDataTests($data);
     }
 
     public function testGetData()
@@ -73,35 +73,35 @@ class DataTest extends \PHPUnit_Framework_TestCase
             ),
         ));
 
-        $configuration = $wrappedData->getData('wrapped.sampleData');
+        $data = $wrappedData->getData('wrapped.sampleData');
 
-        $this->runSampleDataTests($configuration);
+        $this->runSampleDataTests($data);
 
         $this->setExpectedException('RuntimeException');
 
-        $configuration = $wrappedData->getData('wrapped.sampleData.a');
+        $data = $wrappedData->getData('wrapped.sampleData.a');
     }
 
     public function testImport()
     {
-        $configuration = new Data();
-        $configuration->import($this->getSampleData());
+        $data = new Data();
+        $data->import($this->getSampleData());
 
-        $this->runSampleDataTests($configuration);
+        $this->runSampleDataTests($data);
     }
 
     public function testImportData()
     {
-        $configuration = new Data();
-        $configuration->importData(new Data($this->getSampleData()));
+        $data = new Data();
+        $data->importData(new Data($this->getSampleData()));
 
-        $this->runSampleDataTests($configuration);
+        $this->runSampleDataTests($data);
     }
 
     public function testExport()
     {
-        $configuration = new Data($this->getSampleData());
+        $data = new Data($this->getSampleData());
 
-        $this->assertEquals($this->getSampleData(), $configuration->export());
+        $this->assertEquals($this->getSampleData(), $data->export());
     }
 }

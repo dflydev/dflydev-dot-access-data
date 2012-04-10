@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is a part of dflydev/dot-access-configuration.
+ * This file is a part of dflydev/dot-access-data.
  * 
  * (c) Dragonfly Development Inc.
  *

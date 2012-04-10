@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is a part of dflydev/dot-access-configuration.
+ * This file is a part of dflydev/dot-access-data.
  * 
  * (c) Dragonfly Development Inc.
  *
@@ -14,7 +14,7 @@ namespace Dflydev\DotAccessData;
 class Data implements DataInterface
 {
     /**
-     * Internal representation of configuration data
+     * Internal representation of data data
      * 
      * @var array
      */
@@ -95,9 +95,9 @@ class Data implements DataInterface
     /**
      * {@inheritdoc}
      */
-    public function importData(DataInterface $configuration, $clobber = true)
+    public function importData(DataInterface $data, $clobber = true)
     {
-        $this->import($configuration->export(), $clobber);
+        $this->import($data->export(), $clobber);
     }
 
     /**

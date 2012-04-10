@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is a part of dflydev/dot-access-configuration.
+ * This file is a part of dflydev/dot-access-data.
  * 
  * (c) Dragonfly Development Inc.
  *
@@ -45,7 +45,7 @@ interface DataInterface
     public function get($key);
 
     /**
-     * Get a configuration instance for a key
+     * Get a data instance for a key
      * 
      * @param string $key
      * @return DataInterface
@@ -53,7 +53,7 @@ interface DataInterface
     public function getData($key);
 
     /**
-     * Import data into existing configuration
+     * Import data into existing data
      * 
      * @param array $data
      * @param bool $clobber
@@ -61,15 +61,15 @@ interface DataInterface
     public function import(array $data, $clobber = true);
 
     /**
-     * Import data from an external configuration into existing configuration
+     * Import data from an external data into existing data
      * 
-     * @param DataInterface $configuration
+     * @param DataInterface $data
      * @param bool $clobber
      */
-    public function importData(DataInterface $configuration, $clobber = true);
+    public function importData(DataInterface $data, $clobber = true);
 
     /**
-     * Export configuration as raw data
+     * Export data as raw data
      * 
      * @return array
      */
