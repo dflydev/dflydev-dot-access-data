@@ -35,7 +35,45 @@ class Data implements DataInterface
      */
     public function append($key, $value = null)
     {
-        //
+        if (0 == strlen($key)) {
+            throw new \RuntimeException("Key cannot be an empty string");
+        }
+
+        $currentValue =& $this->data;
+        $keyPath = explode('.', $key);
+
+        if (1 == count($keyPath)) {
+            if (!isset($currentValue[$key])) {
+                $currentValue[$key] = array();
+            }
+            if (!is_array($currentValue[$key])) {
+                // Promote this key to an array.
+                // TODO: Is this really what we want to do?
+                $currentValue[$key] = array($currentValue[$key]);
+            }
+            $currentValue[$key][] = $value;
+
+            return;
+        }
+
+        $endKey = array_pop($keyPath);
+        for ( $i = 0; $i < count($keyPath); $i++ ) {
+            $currentKey =& $keyPath[$i];
+            if ( ! isset($currentValue[$currentKey]) ) {
+                $currentValue[$currentKey] = array();
+            }
+            $currentValue =& $currentValue[$currentKey];
+        }
+
+        if(!isset($currentValue[$endKey])) {
+            $currentValue[$endKey] = array();
+        }
+        if (!is_array($currentValue[$endKey])) {
+            $currentValue[$endKey] = array($currentValue[$endKey]);
+        }
+        // Promote this key to an array.
+        // TODO: Is this really what we want to do?
+        $currentValue[$endKey][] = $value;
     }
 
     /**
@@ -43,7 +81,28 @@ class Data implements DataInterface
      */
     public function set($key, $value = null)
     {
-        //
+        if (0 == strlen($key)) {
+            throw new \RuntimeException("Key cannot be an empty string");
+        }
+
+        $currentValue =& $this->data;
+        $keyPath = explode('.', $key);
+
+        if (1 == count($keyPath)) {
+            $currentValue[$key] = $value;
+
+            return;
+        }
+
+        $endKey = array_pop($keyPath);
+        for ( $i = 0; $i < count($keyPath); $i++ ) {
+            $currentKey =& $keyPath[$i];
+            if (!isset($currentValue[$currentKey])) {
+                $currentValue[$currentKey] = array();
+            }
+            $currentValue =& $currentValue[$currentKey];
+        }
+        $currentValue[$endKey] = $value;
     }
 
     /**
@@ -51,7 +110,28 @@ class Data implements DataInterface
      */
     public function remove($key)
     {
-        //
+        if (0 == strlen($key)) {
+            throw new \RuntimeException("Key cannot be an empty string");
+        }
+
+        $currentValue =& $this->data;
+        $keyPath = explode('.', $key);
+
+        if (1 == count($keyPath)) {
+            unset($currentValue[$key]);
+
+            return;
+        }
+
+        $endKey = array_pop($keyPath);
+        for ( $i = 0; $i < count($keyPath); $i++ ) {
+            $currentKey =& $keyPath[$i];
+            if (!isset($currentValue[$currentKey])) {
+                return;
+            }
+            $currentValue =& $currentValue[$currentKey];
+        }
+        unset($currentValue[$endKey]);
     }
 
     /**
