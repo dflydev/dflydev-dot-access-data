@@ -58,7 +58,7 @@ interface ConfigurationInterface
      * @param array $data
      * @param bool $clobber
      */
-    public function importData(array $data, $clobber = true);
+    public function import(array $data, $clobber = true);
 
     /**
      * Import data from an external configuration into existing configuration

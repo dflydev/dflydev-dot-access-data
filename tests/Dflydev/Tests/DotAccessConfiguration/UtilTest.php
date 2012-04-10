@@ -15,6 +15,13 @@ use Dflydev\DotAccessConfiguration\Util;
 
 class UtilTest extends \PHPUnit_Framework_TestCase
 {
+    public function testIsAssoc()
+    {
+        $this->assertTrue(Util::isAssoc(array('a' => 'A',)));
+        $this->assertTrue(Util::isAssoc(array()));
+        $this->assertFalse(Util::isAssoc(array(1 => 'One',)));
+    }
+
     /**
      * @dataProvider mergeAssocArrayProvider
      */

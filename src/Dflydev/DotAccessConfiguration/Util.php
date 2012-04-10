@@ -14,6 +14,20 @@ namespace Dflydev\DotAccessConfiguration;
 class Util
 {
     /**
+     * Test if array is an associative array
+     *
+     * Note that this function will return true if an array is empty. Meaning
+     * empty arrays will be treated as if they are associative arrays.
+     *
+     * @param array $arr
+     * @return boolean
+     */
+    static public function isAssoc(array $arr)
+    {
+        return (is_array($arr) && (!count($arr) || count(array_filter(array_keys($arr),'is_string')) == count($arr)));
+    }
+
+    /**
      * Merge contents from one associtative array to another
      * 
      * @param array $to
