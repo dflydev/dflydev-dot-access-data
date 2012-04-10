@@ -18,9 +18,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.2",
-        "symfony/yaml": ">2.0.0,<2.2",
-        "dflydev/placeholder-resolver": "1.*"
+        "php": ">=5.3.2"
     },
     "autoload": {
         "psr-0": {
