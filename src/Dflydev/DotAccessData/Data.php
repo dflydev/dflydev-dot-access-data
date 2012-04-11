@@ -100,6 +100,9 @@ class Data implements DataInterface
             if (!isset($currentValue[$currentKey])) {
                 $currentValue[$currentKey] = array();
             }
+            if (!is_array($currentValue[$currentKey])) {
+                throw new \RuntimeException("Key path at $currentKey of $key cannot be indexed into (is not an array)");
+            }
             $currentValue =& $currentValue[$currentKey];
         }
         $currentValue[$endKey] = $value;
@@ -144,7 +147,12 @@ class Data implements DataInterface
 
         for ( $i = 0; $i < count($keyPath); $i++ ) {
             $currentKey = $keyPath[$i];
-            if (!isset($currentValue[$currentKey]) ) { return null; }
+            if (!isset($currentValue[$currentKey]) ) {
+                return null;
+            }
+            if (!is_array($currentValue)) {
+                return null;
+            }
             $currentValue = $currentValue[$currentKey];
         }
 

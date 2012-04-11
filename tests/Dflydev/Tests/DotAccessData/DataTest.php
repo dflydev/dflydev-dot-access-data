@@ -30,6 +30,17 @@ class DataTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
             'c' => array('c1', 'c2', 'c3'),
+            'f' => array(
+                'g' => array(
+                    'h' => 'FGH',
+                ),
+            ),
+            'h' => array(
+                'i' => 'I',
+            ),
+            'i' => array(
+                'j' => 'J',
+            ),
         );
     }
 
@@ -41,6 +52,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('D3', $data->get('b.d.d3'));
         $this->assertEquals(array('c1', 'c2', 'c3'), $data->get('c'));
         $this->assertNull($data->get('foo'), 'Foo should not exist');
+        $this->assertNull($data->get('f.g.h.i'));
     }
 
     public function testAppend()
@@ -54,6 +66,8 @@ class DataTest extends \PHPUnit_Framework_TestCase
         $data->append('b.d.d4', 'D');
         $data->append('e', 'E');
         $data->append('f.a', 'b');
+        $data->append('h.i', 'I2');
+        $data->append('i.k.l', 'L');
 
         $this->assertEquals(array('A', 'B'), $data->get('a'));
         $this->assertEquals(array('c1', 'c2', 'c3', 'c4'), $data->get('c'));
@@ -62,6 +76,8 @@ class DataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('D'), $data->get('b.d.d4'));
         $this->assertEquals(array('E'), $data->get('e'));
         $this->assertEquals(array('b'), $data->get('f.a'));
+        $this->assertEquals(array('I', 'I2'), $data->get('h.i'));
+        $this->assertEquals(array('L'), $data->get('i.k.l'));
 
         $this->setExpectedException('RuntimeException');
 
@@ -91,6 +107,17 @@ class DataTest extends \PHPUnit_Framework_TestCase
         $data->set('', 'broken');
     }
 
+    public function testSetClobberStringInPath()
+    {
+        $data = new Data;
+
+        $data->set('a.b.c', 'Should not be able to write to a.b.c.d.e');
+
+        $this->setExpectedException('RuntimeException');
+
+        $data->set('a.b.c.d.e', 'broken');
+    }
+
     public function testRemove()
     {
         $data = new Data($this->getSampleData());
@@ -100,6 +127,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
         $data->remove('b.d.d3');
         $data->remove('d');
         $data->remove('d.e.f');
+        $data->remove('empty.path');
 
         $this->assertNull($data->get('a'));
         $this->assertNull($data->get('b.c'));
