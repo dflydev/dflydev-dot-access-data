@@ -2,7 +2,7 @@
 
 /*
  * This file is a part of dflydev/dot-access-data.
- * 
+ *
  * (c) Dragonfly Development Inc.
  *
  * For the full copyright and license information, please view the LICENSE
@@ -20,32 +20,35 @@ class Util
      * empty arrays will be treated as if they are associative arrays.
      *
      * @param array $arr
+     *
      * @return boolean
      */
-    static public function isAssoc(array $arr)
+    public static function isAssoc(array $arr)
     {
         return (is_array($arr) && (!count($arr) || count(array_filter(array_keys($arr),'is_string')) == count($arr)));
     }
 
     /**
      * Merge contents from one associtative array to another
-     * 
+     *
      * @param array $to
      * @param array $from
-     * @param bool $clobber
+     * @param bool  $clobber
      */
-    static public function mergeAssocArray($to, $from, $clobber = true)
+    public static function mergeAssocArray($to, $from, $clobber = true)
     {
         if ( is_array($from) ) {
-            foreach ( $from as $k => $v ) {
+            foreach ($from as $k => $v) {
                 if (!isset($to[$k])) {
                     $to[$k] = $v;
                 } else {
                     $to[$k] = self::mergeAssocArray($to[$k], $v, $clobber);
                 }
             }
+
             return $to;
         }
+
         return $clobber ? $from : $to;
     }
 }

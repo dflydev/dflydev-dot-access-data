@@ -2,7 +2,7 @@
 
 /*
  * This file is a part of dflydev/dot-access-data.
- * 
+ *
  * (c) Dragonfly Development Inc.
  *
  * For the full copyright and license information, please view the LICENSE
@@ -15,14 +15,14 @@ class Data implements DataInterface
 {
     /**
      * Internal representation of data data
-     * 
+     *
      * @var array
      */
     protected $data;
 
     /**
      * Constructor
-     * 
+     *
      * @param array|null $data
      */
     public function __construct(array $data = null)
@@ -65,7 +65,7 @@ class Data implements DataInterface
             $currentValue =& $currentValue[$currentKey];
         }
 
-        if(!isset($currentValue[$endKey])) {
+        if (!isset($currentValue[$endKey])) {
             $currentValue[$endKey] = array();
         }
         if (!is_array($currentValue[$endKey])) {
