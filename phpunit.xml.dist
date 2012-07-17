@@ -2,7 +2,7 @@
 <phpunit colors="true" bootstrap="tests/bootstrap.php">
     <testsuites>
         <testsuite name="Dot Access Data Test Suite">
-            <directory>./tests/Dflydev/Tests/DotAccessData</directory>
+            <directory>./tests/Dflydev/DotAccessData</directory>
         </testsuite>
     </testsuites>
 

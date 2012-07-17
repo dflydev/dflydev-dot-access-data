@@ -3,8 +3,8 @@
     "type": "library",
     "description": "Given a deep data structure, access data by dot notation.",
     "homepage": "https://github.com/dflydev/dflydev-dot-access-data",
-    "keywords": ["dot", "access", "data", "notation", "config", "yaml", "yml"],
-    "license": "New BSD License",
+    "keywords": ["dot", "access", "data", "notation"],
+    "license": "MIT",
     "authors": [
         {
             "name": "Dragonfly Development Inc.",

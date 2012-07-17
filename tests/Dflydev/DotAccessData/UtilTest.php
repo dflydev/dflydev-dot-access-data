@@ -9,9 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Dflydev\Tests\DotAccessData;
-
-use Dflydev\DotAccessData\Util;
+namespace Dflydev\DotAccessData;
 
 class UtilTest extends \PHPUnit_Framework_TestCase
 {
