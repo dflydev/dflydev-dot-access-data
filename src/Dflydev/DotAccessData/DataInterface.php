@@ -40,10 +40,11 @@ interface DataInterface
      * Get the raw value for a key
      *
      * @param string $key
+     * @param mixed $default
      *
      * @return mixed
      */
-    public function get($key);
+    public function get($key, $default = null);
 
     /**
      * Get a data instance for a key

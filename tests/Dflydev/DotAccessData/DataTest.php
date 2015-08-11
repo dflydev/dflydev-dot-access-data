@@ -2,7 +2,7 @@
 
 /*
  * This file is a part of dflydev/dot-access-data.
- * 
+ *
  * (c) Dragonfly Development Inc.
  *
  * For the full copyright and license information, please view the LICENSE
@@ -50,6 +50,8 @@ class DataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('c1', 'c2', 'c3'), $data->get('c'));
         $this->assertNull($data->get('foo'), 'Foo should not exist');
         $this->assertNull($data->get('f.g.h.i'));
+        $this->assertEquals($data->get('foo', 'default-value-1'), 'default-value-1', 'Return default value');
+        $this->assertEquals($data->get('f.g.h.i', 'default-value-2'), 'default-value-2');
     }
 
     public function testAppend()

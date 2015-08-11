@@ -140,7 +140,7 @@ class Data implements DataInterface
     /**
      * {@inheritdoc}
      */
-    public function get($key)
+    public function get($key, $default = null)
     {
         $currentValue = $this->data;
         $keyPath = explode('.', $key);
@@ -148,15 +148,15 @@ class Data implements DataInterface
         for ( $i = 0; $i < count($keyPath); $i++ ) {
             $currentKey = $keyPath[$i];
             if (!isset($currentValue[$currentKey]) ) {
-                return null;
+                return $default;
             }
             if (!is_array($currentValue)) {
-                return null;
+                return $default;
             }
             $currentValue = $currentValue[$currentKey];
         }
 
-        return $currentValue;
+        return $currentValue === null ? $default : $currentValue;
     }
 
     /**
