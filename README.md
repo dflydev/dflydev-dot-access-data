@@ -51,6 +51,7 @@ $data = new Data(array(
             'username' => 'dman',
             'password' => 'D---S',
             'roles' => array('web', 'db'),
+            'nick' => 'dewey dman'
         ),
         'lewey' => array(
             'username' => 'lman',
@@ -66,6 +67,10 @@ $username = $data->get('hosts.hewey.username');
 $password = $data->get('hosts.hewey.password');
 // array('web')
 $roles = $data->get('hosts.hewey.roles');
+// dewey dman
+$nick = $data->get('hosts.dewey.nick');
+// Unknown
+$nick = $data->get('hosts.lewey.nick', 'Unknown');
 
 // DataInterface instance
 $dewey = $data->getData('hosts.dewey');
