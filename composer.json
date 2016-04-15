@@ -15,6 +15,11 @@
             "name": "Beau Simensen",
             "email": "beau@dflydev.com",
             "homepage": "http://beausimensen.com"
+        },
+        {
+            "name": "Carlos Frutos",
+            "email": "carlos@kiwing.it",
+            "homepage": "https://github.com/cfrutos"
         }
     ],
     "require": {

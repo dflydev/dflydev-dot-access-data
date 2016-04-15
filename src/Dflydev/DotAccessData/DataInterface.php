@@ -47,6 +47,15 @@ interface DataInterface
     public function get($key, $default = null);
 
     /**
+     * Check if the key exists
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function has($key);
+
+    /**
      * Get a data instance for a key
      *
      * @param string $key
