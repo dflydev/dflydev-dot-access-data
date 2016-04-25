@@ -146,6 +146,23 @@ class DataTest extends \PHPUnit_Framework_TestCase
         $this->runSampleDataTests($data);
     }
 
+    public function testHas()
+    {
+        $data = new Data($this->getSampleData());
+
+        foreach (
+            array('a', 'i', 'b.d', 'f.g.h', 'h.i', 'b.d.d1') as $existentKey
+        ) {
+            $this->assertTrue($data->has($existentKey));
+        }
+
+        foreach (
+            array('p', 'b.b1', 'b.c.C1', 'h.i.I', 'b.d.d1.D1') as $notExistentKey
+        ) {
+            $this->assertFalse($data->has($notExistentKey));
+        }
+    }
+
     public function testGetData()
     {
         $wrappedData = new Data(array(

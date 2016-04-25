@@ -33,6 +33,12 @@ $data->get('a.b.d');
 
 // array('E0', 'E1', 'E2')
 $data->get('a.b.e');
+
+// true
+$data->has('a.b.c');
+
+// false
+$data->has('a.b.d.j');
 ```
 
 A more concrete example:
@@ -92,6 +98,9 @@ $data->set('hosts.april', array(
     'password' => '@---S',
     'roles' => array('web'),
 ));
+
+// Check if a key exists (true to this case)
+$hasKey = $data->has('hosts.dewey.username');
 ```
 
 
