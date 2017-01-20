@@ -171,7 +171,7 @@ class Data implements DataInterface
             $currentKey = $keyPath[$i];
             if (
                 !is_array($currentValue) ||
-                !isset($currentValue[$currentKey])
+                !array_key_exists($currentKey, $currentValue)
             ) {
                 return false;
             }
