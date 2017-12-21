@@ -11,6 +11,8 @@
 
 namespace Dflydev\DotAccessData;
 
+use RuntimeException;
+
 class Data implements DataInterface
 {
     /**
@@ -27,7 +29,7 @@ class Data implements DataInterface
      */
     public function __construct(array $data = null)
     {
-        $this->data = $data ?: array();
+        $this->data = $data ?: [];
     }
 
     /**
@@ -36,7 +38,7 @@ class Data implements DataInterface
     public function append($key, $value = null)
     {
         if (0 == strlen($key)) {
-            throw new \RuntimeException("Key cannot be an empty string");
+            throw new RuntimeException("Key cannot be an empty string");
         }
 
         $currentValue =& $this->data;
@@ -44,12 +46,12 @@ class Data implements DataInterface
 
         if (1 == count($keyPath)) {
             if (!isset($currentValue[$key])) {
-                $currentValue[$key] = array();
+                $currentValue[$key] = [];
             }
             if (!is_array($currentValue[$key])) {
                 // Promote this key to an array.
                 // TODO: Is this really what we want to do?
-                $currentValue[$key] = array($currentValue[$key]);
+                $currentValue[$key] = [$currentValue[$key]];
             }
             $currentValue[$key][] = $value;
 
@@ -60,16 +62,16 @@ class Data implements DataInterface
         for ( $i = 0; $i < count($keyPath); $i++ ) {
             $currentKey =& $keyPath[$i];
             if ( ! isset($currentValue[$currentKey]) ) {
-                $currentValue[$currentKey] = array();
+                $currentValue[$currentKey] = [];
             }
             $currentValue =& $currentValue[$currentKey];
         }
 
         if (!isset($currentValue[$endKey])) {
-            $currentValue[$endKey] = array();
+            $currentValue[$endKey] = [];
         }
         if (!is_array($currentValue[$endKey])) {
-            $currentValue[$endKey] = array($currentValue[$endKey]);
+            $currentValue[$endKey] = [$currentValue[$endKey]];
         }
         // Promote this key to an array.
         // TODO: Is this really what we want to do?
@@ -82,7 +84,7 @@ class Data implements DataInterface
     public function set($key, $value = null)
     {
         if (0 == strlen($key)) {
-            throw new \RuntimeException("Key cannot be an empty string");
+            throw new RuntimeException("Key cannot be an empty string");
         }
 
         $currentValue =& $this->data;
@@ -98,10 +100,10 @@ class Data implements DataInterface
         for ( $i = 0; $i < count($keyPath); $i++ ) {
             $currentKey =& $keyPath[$i];
             if (!isset($currentValue[$currentKey])) {
-                $currentValue[$currentKey] = array();
+                $currentValue[$currentKey] = [];
             }
             if (!is_array($currentValue[$currentKey])) {
-                throw new \RuntimeException("Key path at $currentKey of $key cannot be indexed into (is not an array)");
+                throw new RuntimeException("Key path at $currentKey of $key cannot be indexed into (is not an array)");
             }
             $currentValue =& $currentValue[$currentKey];
         }
@@ -114,7 +116,7 @@ class Data implements DataInterface
     public function remove($key)
     {
         if (0 == strlen($key)) {
-            throw new \RuntimeException("Key cannot be an empty string");
+            throw new RuntimeException("Key cannot be an empty string");
         }
 
         $currentValue =& $this->data;
@@ -191,7 +193,7 @@ class Data implements DataInterface
             return new Data($value);
         }
 
-        throw new \RuntimeException("Value at '$key' could not be represented as a DataInterface");
+        throw new RuntimeException("Value at '$key' could not be represented as a DataInterface");
     }
 
     /**

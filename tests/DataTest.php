@@ -11,43 +11,46 @@
 
 namespace Dflydev\DotAccessData;
 
-class DataTest extends \PHPUnit_Framework_TestCase
+use RuntimeException;
+use PHPUnit\Framework\TestCase;
+
+class DataTest extends TestCase
 {
     protected function getSampleData()
     {
-        return array(
+        return [
             'a' => 'A',
-            'b' => array(
+            'b' => [
                 'b' => 'B',
-                'c' => array('C1', 'C2', 'C3'),
-                'd' => array(
+                'c' => ['C1', 'C2', 'C3'],
+                'd' => [
                     'd1' => 'D1',
                     'd2' => 'D2',
                     'd3' => 'D3',
-                ),
-            ),
-            'c' => array('c1', 'c2', 'c3'),
-            'f' => array(
-                'g' => array(
+                ],
+            ],
+            'c' => ['c1', 'c2', 'c3'],
+            'f' => [
+                'g' => [
                     'h' => 'FGH',
-                ),
-            ),
-            'h' => array(
+                ],
+            ],
+            'h' => [
                 'i' => 'I',
-            ),
-            'i' => array(
+            ],
+            'i' => [
                 'j' => 'J',
-            ),
-        );
+            ],
+        ];
     }
 
     protected function runSampleDataTests(DataInterface $data)
     {
         $this->assertEquals('A', $data->get('a'));
         $this->assertEquals('B', $data->get('b.b'));
-        $this->assertEquals(array('C1', 'C2', 'C3'), $data->get('b.c'));
+        $this->assertEquals(['C1', 'C2', 'C3'], $data->get('b.c'));
         $this->assertEquals('D3', $data->get('b.d.d3'));
-        $this->assertEquals(array('c1', 'c2', 'c3'), $data->get('c'));
+        $this->assertEquals(['c1', 'c2', 'c3'], $data->get('c'));
         $this->assertNull($data->get('foo'), 'Foo should not exist');
         $this->assertNull($data->get('f.g.h.i'));
         $this->assertEquals($data->get('foo', 'default-value-1'), 'default-value-1', 'Return default value');
@@ -68,17 +71,17 @@ class DataTest extends \PHPUnit_Framework_TestCase
         $data->append('h.i', 'I2');
         $data->append('i.k.l', 'L');
 
-        $this->assertEquals(array('A', 'B'), $data->get('a'));
-        $this->assertEquals(array('c1', 'c2', 'c3', 'c4'), $data->get('c'));
-        $this->assertEquals(array('C1', 'C2', 'C3', 'C4'), $data->get('b.c'));
-        $this->assertEquals(array('D3', 'D3b'), $data->get('b.d.d3'));
-        $this->assertEquals(array('D'), $data->get('b.d.d4'));
-        $this->assertEquals(array('E'), $data->get('e'));
-        $this->assertEquals(array('b'), $data->get('f.a'));
-        $this->assertEquals(array('I', 'I2'), $data->get('h.i'));
-        $this->assertEquals(array('L'), $data->get('i.k.l'));
+        $this->assertEquals(['A', 'B'], $data->get('a'));
+        $this->assertEquals(['c1', 'c2', 'c3', 'c4'], $data->get('c'));
+        $this->assertEquals(['C1', 'C2', 'C3', 'C4'], $data->get('b.c'));
+        $this->assertEquals(['D3', 'D3b'], $data->get('b.d.d3'));
+        $this->assertEquals(['D'], $data->get('b.d.d4'));
+        $this->assertEquals(['E'], $data->get('e'));
+        $this->assertEquals(['b'], $data->get('f.a'));
+        $this->assertEquals(['I', 'I2'], $data->get('h.i'));
+        $this->assertEquals(['L'], $data->get('i.k.l'));
 
-        $this->setExpectedException('RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $data->append('', 'broken');
     }
@@ -93,15 +96,15 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
         $data->set('a', 'A');
         $data->set('b.c', 'C');
-        $data->set('d.e', array('f' => 'F', 'g' => 'G',));
+        $data->set('d.e', ['f' => 'F', 'g' => 'G']);
 
         $this->assertEquals('A', $data->get('a'));
-        $this->assertEquals(array('c' => 'C'), $data->get('b'));
+        $this->assertEquals(['c' => 'C'], $data->get('b'));
         $this->assertEquals('C', $data->get('b.c'));
         $this->assertEquals('F', $data->get('d.e.f'));
-        $this->assertEquals(array('e' => array('f' => 'F', 'g' => 'G',)), $data->get('d'));
+        $this->assertEquals(['e' => ['f' => 'F', 'g' => 'G']], $data->get('d'));
 
-        $this->setExpectedException('RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $data->set('', 'broken');
     }
@@ -112,7 +115,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
         $data->set('a.b.c', 'Should not be able to write to a.b.c.d.e');
 
-        $this->setExpectedException('RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $data->set('a.b.c.d.e', 'broken');
     }
@@ -134,7 +137,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
         $this->assertNull(null);
         $this->assertEquals('D2', $data->get('b.d.d2'));
 
-        $this->setExpectedException('RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $data->remove('', 'broken');
     }
@@ -151,13 +154,13 @@ class DataTest extends \PHPUnit_Framework_TestCase
         $data = new Data($this->getSampleData());
 
         foreach (
-            array('a', 'i', 'b.d', 'f.g.h', 'h.i', 'b.d.d1') as $existentKey
+            ['a', 'i', 'b.d', 'f.g.h', 'h.i', 'b.d.d1'] as $existentKey
         ) {
             $this->assertTrue($data->has($existentKey));
         }
 
         foreach (
-            array('p', 'b.b1', 'b.c.C1', 'h.i.I', 'b.d.d1.D1') as $notExistentKey
+            ['p', 'b.b1', 'b.c.C1', 'h.i.I', 'b.d.d1.D1'] as $notExistentKey
         ) {
             $this->assertFalse($data->has($notExistentKey));
         }
@@ -165,17 +168,17 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
     public function testGetData()
     {
-        $wrappedData = new Data(array(
-            'wrapped' => array(
+        $wrappedData = new Data([
+            'wrapped' => [
                 'sampleData' => $this->getSampleData()
-            ),
-        ));
+            ],
+        ]);
 
         $data = $wrappedData->getData('wrapped.sampleData');
 
         $this->runSampleDataTests($data);
 
-        $this->setExpectedException('RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $data = $wrappedData->getData('wrapped.sampleData.a');
     }

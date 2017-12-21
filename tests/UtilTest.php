@@ -2,7 +2,7 @@
 
 /*
  * This file is a part of dflydev/dot-access-data.
- * 
+ *
  * (c) Dragonfly Development Inc.
  *
  * For the full copyright and license information, please view the LICENSE
@@ -11,13 +11,15 @@
 
 namespace Dflydev\DotAccessData;
 
-class UtilTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class UtilTest extends TestCase
 {
     public function testIsAssoc()
     {
-        $this->assertTrue(Util::isAssoc(array('a' => 'A',)));
-        $this->assertTrue(Util::isAssoc(array()));
-        $this->assertFalse(Util::isAssoc(array(1 => 'One',)));
+        $this->assertTrue(Util::isAssoc(['a' => 'A']));
+        $this->assertTrue(Util::isAssoc([]));
+        $this->assertFalse(Util::isAssoc([1 => 'One']));
     }
 
     /**
@@ -31,91 +33,90 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 
     public function mergeAssocArrayProvider()
     {
-        return array(
-
-            array(
+        return [
+            [
                 'Clobber should replace to value with from value for strings (shallow)',
                 // to
-                array('a' => 'A'),
+                ['a' => 'A'],
                 // from
-                array('a' => 'B'),
+                ['a' => 'B'],
                 // clobber
                 true,
                 // expected result
-                array('a' => 'B'),
-            ),
+                ['a' => 'B'],
+            ],
 
-            array(
+            [
                 'Clobber should replace to value with from value for strings (deep)',
                 // to
-                array('a' => array('b' => 'B',),),
+                ['a' => ['b' => 'B']],
                 // from
-                array('a' => array('b' => 'C',),),
+                ['a' => ['b' => 'C']],
                 // clobber
                 true,
                 // expected result
-                array('a' => array('b' => 'C',),),
-            ),
+                ['a' => ['b' => 'C']]
+            ],
 
-            array(
+            [
                 'Clobber should  NOTreplace to value with from value for strings (shallow)',
                 // to
-                array('a' => 'A'),
+                ['a' => 'A'],
                 // from
-                array('a' => 'B'),
+                ['a' => 'B'],
                 // clobber
                 false,
                 // expected result
-                array('a' => 'A'),
-            ),
+                ['a' => 'A'],
+            ],
 
-            array(
+            [
                 'Clobber should NOT replace to value with from value for strings (deep)',
                 // to
-                array('a' => array('b' => 'B',),),
+                ['a' => ['b' => 'B']],
                 // from
-                array('a' => array('b' => 'C',),),
+                ['a' => ['b' => 'C']],
                 // clobber
                 false,
                 // expected result
-                array('a' => array('b' => 'B',),),
-            ),
+                ['a' => ['b' => 'B']],
+            ],
 
-            array(
+            [
                 'Associative arrays should be combined',
                 // to
-                array('a' => array('b' => 'B',),),
+                ['a' => ['b' => 'B']],
                 // from
-                array('a' => array('c' => 'C',),),
+                ['a' => ['c' => 'C']],
                 // clobber
                 null,
                 // expected result
-                array('a' => array('b' => 'B', 'c' => 'C',),),
-            ),
+                ['a' => ['b' => 'B', 'c' => 'C']],
+            ],
 
-            array(
+            [
                 'Arrays should be replaced (with clobber enabled)',
                 // to
-                array('a' => array('b', 'c',)),
+                ['a' => ['b', 'c']],
                 // from
-                array('a' => array('B', 'C',),),
+                ['a' => ['B', 'C']],
                 // clobber
                 true,
                 // expected result
-                array('a' => array('B', 'C',),),
-            ),
+                ['a' => ['B', 'C']],
+            ],
 
-            array(
+            [
                 'Arrays should be NOT replaced (with clobber disabled)',
                 // to
-                array('a' => array('b', 'c',)),
+                ['a' => ['b', 'c']],
                 // from
-                array('a' => array('B', 'C',),),
+                ['a' => ['B', 'C']],
                 // clobber
                 false,
                 // expected result
-                array('a' => array('b', 'c',),),
-            ),
-        );
+                ['a' => ['b', 'c']],
+            ],
+        ];
     }
 }
