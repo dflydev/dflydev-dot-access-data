@@ -105,6 +105,21 @@ $data->set('hosts.april', [
 $hasKey = $data->has('hosts.dewey.username');
 ```
 
+`Data` may be used as an array, since it implements `ArrayAccess` interface:
+
+```php
+// Get
+$data->get('name') === $data['name']; // true
+
+$data['name'] = 'Dewey';
+// is equivalent to
+$data->set($name, 'Dewey');
+
+isset($data['name']) === $data->has('name');
+
+// Remove key
+unset($data['name']);
+```
 
 License
 -------

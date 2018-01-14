@@ -205,4 +205,89 @@ class DataTest extends TestCase
 
         $this->assertEquals($this->getSampleData(), $data->export());
     }
+
+    public function testOffsetExists()
+    {
+        $data = new Data($this->getSampleData());
+
+        foreach (
+            ['a', 'i', 'b.d', 'f.g.h', 'h.i', 'b.d.d1'] as $existentKey
+        ) {
+            $this->assertTrue(isset($data[$existentKey]));
+        }
+
+        foreach (
+            ['p', 'b.b1', 'b.c.C1', 'h.i.I', 'b.d.d1.D1'] as $notExistentKey
+        ) {
+            $this->assertFalse(isset($data[$notExistentKey]));
+        }
+    }
+
+    public function testOffsetGet()
+    {
+        $wrappedData = new Data([
+            'wrapped' => [
+                'sampleData' => $this->getSampleData()
+            ],
+        ]);
+
+        $data = $wrappedData->getData('wrapped.sampleData');
+
+        $this->assertEquals('A', $data['a']);
+        $this->assertEquals('B', $data['b.b']);
+        $this->assertEquals(['C1', 'C2', 'C3'], $data['b.c']);
+        $this->assertEquals('D3', $data['b.d.d3']);
+        $this->assertEquals(['c1', 'c2', 'c3'], $data['c']);
+        $this->assertNull($data['foo'], 'Foo should not exist');
+        $this->assertNull($data['f.g.h.i']);
+
+        $this->expectException(RuntimeException::class);
+
+        $data = $wrappedData->getData('wrapped.sampleData.a');
+    }
+
+    public function testOffsetSet()
+    {
+        $data = new Data;
+
+        $this->assertNull($data['a']);
+        $this->assertNull($data['b.c']);
+        $this->assertNull($data['d.e']);
+
+        $data['a'] = 'A';
+        $data['b.c'] = 'C';
+        $data['d.e'] = ['f' => 'F', 'g' => 'G'];
+
+        $this->assertEquals('A', $data['a']);
+        $this->assertEquals(['c' => 'C'], $data['b']);
+        $this->assertEquals('C', $data['b.c']);
+        $this->assertEquals('F', $data['d.e.f']);
+        $this->assertEquals(['e' => ['f' => 'F', 'g' => 'G']], $data['d']);
+
+        $this->expectException(RuntimeException::class);
+
+        $data->set('', 'broken');
+    }
+
+    public function testOffsetUnset()
+    {
+        $data = new Data($this->getSampleData());
+
+        unset($data['a']);
+        unset($data['b.c']);
+        unset($data['b.d.d3']);
+        unset($data['d']);
+        unset($data['d.e.f']);
+        unset($data['empty.path']);
+
+        $this->assertNull($data['a']);
+        $this->assertNull($data['b.c']);
+        $this->assertNull($data['b.d.d3']);
+        $this->assertNull(null);
+        $this->assertEquals('D2', $data['b.d.d2']);
+
+        $this->expectException(RuntimeException::class);
+
+        unset($data['']);        
+    }
 }
