@@ -89,7 +89,7 @@ class UtilTest extends TestCase
                 // from
                 ['a' => ['c' => 'C']],
                 // clobber
-                null,
+                false,
                 // expected result
                 ['a' => ['b' => 'B', 'c' => 'C']],
             ],

@@ -23,30 +23,28 @@ class Util
      *
      * @return boolean
      */
-    public static function isAssoc(array $arr)
+    public static function isAssoc(array $arr): bool
     {
         return (is_array($arr) && (!count($arr) || count(array_filter(array_keys($arr),'is_string')) == count($arr)));
     }
 
     /**
-     * Merge contents from one associtative array to another
+     * Merge contents from one associative array to another
      *
      * @param array $to
      * @param array $from
-     * @param bool  $clobber
+     * @param bool $clobber
+     *
+     * @return array
      */
-    public static function mergeAssocArray($to, $from, $clobber = true)
+    public static function mergeAssocArray(array $to, array $from, bool $clobber = true): array
     {
-        if ( is_array($from) ) {
-            foreach ($from as $k => $v) {
-                if (!isset($to[$k])) {
-                    $to[$k] = $v;
-                } else {
-                    $to[$k] = self::mergeAssocArray($to[$k], $v, $clobber);
-                }
+        foreach ($from as $k => $v) {
+            if (!isset($to[$k])) {
+                $to[$k] = $v;
+            } elseif (is_array($to[$k]) && is_array($v)) {
+                $to[$k] = self::mergeAssocArray($to[$k], $v, $clobber);
             }
-
-            return $to;
         }
 
         return $clobber ? $from : $to;
