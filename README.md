@@ -9,7 +9,7 @@ Requirements
 
  * PHP (7.0+)
 
-> For PHP (5.3+) please reffer to version `1.0`.
+> For PHP (5.3+) please refer to version `1.0`.
 
 
 Usage
@@ -109,7 +109,7 @@ $hasKey = $data->has('hosts.dewey.username');
 License
 -------
 
-This library is licensed under the New BSD License - see the LICENSE file
+This library is licensed under the MIT License - see the LICENSE file
 for details.
 
 
