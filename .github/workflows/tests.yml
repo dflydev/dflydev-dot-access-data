@@ -1,0 +1,29 @@
+name: Tests
+
+on:
+    push: ~
+    pull_request: ~
+
+jobs:
+    phpunit:
+        name: PHPUnit on ${{ matrix.php }} ${{ matrix.composer-flags }}
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                php: ['7.1', '7.2', '7.3', '7.4']
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  extensions: curl
+                  coverage: pcov
+                  tools: composer:v2
+
+            - run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+            - run: composer update --no-progress
+
+            - run: vendor/bin/phpunit --coverage-text
