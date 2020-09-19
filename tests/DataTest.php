@@ -11,7 +11,8 @@
 
 namespace Dflydev\DotAccessData;
 
-use RuntimeException;
+use Dflydev\DotAccessData\Exception\DataException;
+use Dflydev\DotAccessData\Exception\InvalidPathException;
 use PHPUnit\Framework\TestCase;
 
 class DataTest extends TestCase
@@ -81,7 +82,7 @@ class DataTest extends TestCase
         $this->assertEquals(['I', 'I2'], $data->get('h.i'));
         $this->assertEquals(['L'], $data->get('i.k.l'));
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidPathException::class);
 
         $data->append('', 'broken');
     }
@@ -104,7 +105,7 @@ class DataTest extends TestCase
         $this->assertEquals('F', $data->get('d.e.f'));
         $this->assertEquals(['e' => ['f' => 'F', 'g' => 'G']], $data->get('d'));
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidPathException::class);
 
         $data->set('', 'broken');
     }
@@ -115,7 +116,7 @@ class DataTest extends TestCase
 
         $data->set('a.b.c', 'Should not be able to write to a.b.c.d.e');
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(DataException::class);
 
         $data->set('a.b.c.d.e', 'broken');
     }
@@ -137,7 +138,7 @@ class DataTest extends TestCase
         $this->assertNull(null);
         $this->assertEquals('D2', $data->get('b.d.d2'));
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidPathException::class);
 
         $data->remove('', 'broken');
     }
@@ -178,7 +179,7 @@ class DataTest extends TestCase
 
         $this->runSampleDataTests($data);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(DataException::class);
 
         $data = $wrappedData->getData('wrapped.sampleData.a');
     }
@@ -260,7 +261,7 @@ class DataTest extends TestCase
         $this->assertEquals('F', $data['d.e.f']);
         $this->assertEquals(['e' => ['f' => 'F', 'g' => 'G']], $data['d']);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidPathException::class);
 
         $data->set('', 'broken');
     }
@@ -282,7 +283,7 @@ class DataTest extends TestCase
         $this->assertNull(null);
         $this->assertEquals('D2', $data['b.d.d2']);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidPathException::class);
 
         unset($data['']);
     }
