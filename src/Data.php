@@ -141,6 +141,8 @@ class Data implements DataInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @psalm-mutation-free
      */
     public function get(string $key, $default = null)
     {
@@ -163,6 +165,8 @@ class Data implements DataInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @psalm-mutation-free
      */
     public function has(string $key): bool
     {
@@ -185,6 +189,8 @@ class Data implements DataInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @psalm-mutation-free
      */
     public function getData(string $key): DataInterface
     {
@@ -214,6 +220,8 @@ class Data implements DataInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @psalm-mutation-free
      */
     public function export(): array
     {

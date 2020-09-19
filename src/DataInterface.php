@@ -43,6 +43,8 @@ interface DataInterface
      * @param mixed $default
      *
      * @return mixed
+     *
+     * @psalm-mutation-free
      */
     public function get(string $key, $default = null);
 
@@ -52,6 +54,8 @@ interface DataInterface
      * @param string $key
      *
      * @return bool
+     *
+     * @psalm-mutation-free
      */
     public function has(string $key): bool;
 
@@ -61,6 +65,8 @@ interface DataInterface
      * @param string $key
      *
      * @return DataInterface
+     *
+     * @psalm-mutation-free
      */
     public function getData(string $key): DataInterface;
 
@@ -84,6 +90,8 @@ interface DataInterface
      * Export data as raw data
      *
      * @return array<string, mixed>
+     *
+     * @psalm-mutation-free
      */
     public function export(): array;
 }

@@ -22,6 +22,8 @@ class Util
      * @param array<mixed> $arr
      *
      * @return bool
+     *
+     * @psalm-pure
      */
     public static function isAssoc(array $arr): bool
     {
@@ -36,6 +38,8 @@ class Util
      * @param bool  $clobber
      *
      * @return mixed
+     *
+     * @psalm-pure
      */
     public static function mergeAssocArray($to, $from, $clobber = true)
     {
