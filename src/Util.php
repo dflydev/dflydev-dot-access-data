@@ -25,7 +25,7 @@ class Util
      */
     public static function isAssoc(array $arr)
     {
-        return (is_array($arr) && (!count($arr) || count(array_filter(array_keys($arr),'is_string')) == count($arr)));
+        return !count($arr) || count(array_filter(array_keys($arr),'is_string')) == count($arr);
     }
 
     /**
