@@ -18,24 +18,24 @@ class Data implements DataInterface
     /**
      * Internal representation of data data
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $data;
 
     /**
      * Constructor
      *
-     * @param array|null $data
+     * @param array<string, mixed> $data
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->data = $data ?: [];
+        $this->data = $data;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function append($key, $value = null)
+    public function append(string $key, $value = null): void
     {
         if (0 == strlen($key)) {
             throw new RuntimeException("Key cannot be an empty string");
@@ -81,7 +81,7 @@ class Data implements DataInterface
     /**
      * {@inheritdoc}
      */
-    public function set($key, $value = null)
+    public function set(string $key, $value = null): void
     {
         if (0 == strlen($key)) {
             throw new RuntimeException("Key cannot be an empty string");
@@ -113,7 +113,7 @@ class Data implements DataInterface
     /**
      * {@inheritdoc}
      */
-    public function remove($key)
+    public function remove(string $key): void
     {
         if (0 == strlen($key)) {
             throw new RuntimeException("Key cannot be an empty string");
@@ -142,7 +142,7 @@ class Data implements DataInterface
     /**
      * {@inheritdoc}
      */
-    public function get($key, $default = null)
+    public function get(string $key, $default = null)
     {
         $currentValue = $this->data;
         $keyPath = explode('.', $key);
@@ -164,7 +164,7 @@ class Data implements DataInterface
     /**
      * {@inheritdoc}
      */
-    public function has($key)
+    public function has(string $key): bool
     {
         $currentValue = &$this->data;
         $keyPath = explode('.', $key);
@@ -186,7 +186,7 @@ class Data implements DataInterface
     /**
      * {@inheritdoc}
      */
-    public function getData($key)
+    public function getData(string $key): DataInterface
     {
         $value = $this->get($key);
         if (is_array($value) && Util::isAssoc($value)) {
@@ -199,7 +199,7 @@ class Data implements DataInterface
     /**
      * {@inheritdoc}
      */
-    public function import(array $data, $clobber = true)
+    public function import(array $data, bool $clobber = true): void
     {
         $this->data = Util::mergeAssocArray($this->data, $data, $clobber);
     }
@@ -207,7 +207,7 @@ class Data implements DataInterface
     /**
      * {@inheritdoc}
      */
-    public function importData(DataInterface $data, $clobber = true)
+    public function importData(DataInterface $data, bool $clobber = true): void
     {
         $this->import($data->export(), $clobber);
     }
@@ -215,7 +215,7 @@ class Data implements DataInterface
     /**
      * {@inheritdoc}
      */
-    public function export()
+    public function export(): array
     {
         return $this->data;
     }

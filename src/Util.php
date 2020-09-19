@@ -19,11 +19,11 @@ class Util
      * Note that this function will return true if an array is empty. Meaning
      * empty arrays will be treated as if they are associative arrays.
      *
-     * @param array $arr
+     * @param array<mixed> $arr
      *
-     * @return boolean
+     * @return bool
      */
-    public static function isAssoc(array $arr)
+    public static function isAssoc(array $arr): bool
     {
         return !count($arr) || count(array_filter(array_keys($arr),'is_string')) == count($arr);
     }
@@ -31,9 +31,11 @@ class Util
     /**
      * Merge contents from one associtative array to another
      *
-     * @param array $to
-     * @param array $from
+     * @param mixed $to
+     * @param mixed $from
      * @param bool  $clobber
+     *
+     * @return mixed
      */
     public static function mergeAssocArray($to, $from, $clobber = true)
     {

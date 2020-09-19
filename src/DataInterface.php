@@ -19,7 +19,7 @@ interface DataInterface
      * @param string $key
      * @param mixed  $value
      */
-    public function append($key, $value = null);
+    public function append(string $key, $value = null): void;
 
     /**
      * Set a value for a key
@@ -27,14 +27,14 @@ interface DataInterface
      * @param string $key
      * @param mixed  $value
      */
-    public function set($key, $value = null);
+    public function set(string $key, $value = null): void;
 
     /**
      * Remove a key
      *
      * @param string $key
      */
-    public function remove($key);
+    public function remove(string $key): void;
 
     /**
      * Get the raw value for a key
@@ -44,7 +44,7 @@ interface DataInterface
      *
      * @return mixed
      */
-    public function get($key, $default = null);
+    public function get(string $key, $default = null);
 
     /**
      * Check if the key exists
@@ -53,7 +53,7 @@ interface DataInterface
      *
      * @return bool
      */
-    public function has($key);
+    public function has(string $key): bool;
 
     /**
      * Get a data instance for a key
@@ -62,15 +62,15 @@ interface DataInterface
      *
      * @return DataInterface
      */
-    public function getData($key);
+    public function getData(string $key): DataInterface;
 
     /**
      * Import data into existing data
      *
-     * @param array $data
-     * @param bool  $clobber
+     * @param array<string, mixed> $data
+     * @param bool                 $clobber
      */
-    public function import(array $data, $clobber = true);
+    public function import(array $data, bool $clobber = true): void;
 
     /**
      * Import data from an external data into existing data
@@ -78,12 +78,12 @@ interface DataInterface
      * @param DataInterface $data
      * @param bool          $clobber
      */
-    public function importData(DataInterface $data, $clobber = true);
+    public function importData(DataInterface $data, bool $clobber = true): void;
 
     /**
      * Export data as raw data
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function export();
+    public function export(): array;
 }
