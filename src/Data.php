@@ -12,8 +12,9 @@
 namespace Dflydev\DotAccessData;
 
 use RuntimeException;
+use ArrayAccess;
 
-class Data implements DataInterface
+class Data implements DataInterface, ArrayAccess
 {
     /**
      * Internal representation of data data
@@ -219,4 +220,37 @@ class Data implements DataInterface
     {
         return $this->data;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetExists($key)
+    {
+        return $this->has($key);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetGet($key)
+    {
+        return $this->get($key);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetSet($key, $value)
+    {
+        $this->set($key, $value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetUnset($key)
+    {
+        $this->remove($key);
+    }
+
 }
