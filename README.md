@@ -7,7 +7,7 @@ Given a deep data structure, access data by dot notation.
 Requirements
 ------------
 
- * PHP (7.0+)
+ * PHP (7.1+)
 
 > For PHP (5.3+) please refer to version `1.0`.
 
