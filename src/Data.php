@@ -59,9 +59,9 @@ class Data implements DataInterface
         }
 
         $endKey = array_pop($keyPath);
-        for ( $i = 0; $i < count($keyPath); $i++ ) {
+        for ($i = 0; $i < count($keyPath); $i++) {
             $currentKey =& $keyPath[$i];
-            if ( ! isset($currentValue[$currentKey]) ) {
+            if (! isset($currentValue[$currentKey])) {
                 $currentValue[$currentKey] = [];
             }
             $currentValue =& $currentValue[$currentKey];
@@ -97,7 +97,7 @@ class Data implements DataInterface
         }
 
         $endKey = array_pop($keyPath);
-        for ( $i = 0; $i < count($keyPath); $i++ ) {
+        for ($i = 0; $i < count($keyPath); $i++) {
             $currentKey =& $keyPath[$i];
             if (!isset($currentValue[$currentKey])) {
                 $currentValue[$currentKey] = [];
@@ -129,7 +129,7 @@ class Data implements DataInterface
         }
 
         $endKey = array_pop($keyPath);
-        for ( $i = 0; $i < count($keyPath); $i++ ) {
+        for ($i = 0; $i < count($keyPath); $i++) {
             $currentKey =& $keyPath[$i];
             if (!isset($currentValue[$currentKey])) {
                 return;
@@ -149,9 +149,9 @@ class Data implements DataInterface
         $currentValue = $this->data;
         $keyPath = explode('.', $key);
 
-        for ( $i = 0; $i < count($keyPath); $i++ ) {
+        for ($i = 0; $i < count($keyPath); $i++) {
             $currentKey = $keyPath[$i];
-            if (!isset($currentValue[$currentKey]) ) {
+            if (!isset($currentValue[$currentKey])) {
                 return $default;
             }
             if (!is_array($currentValue)) {
@@ -173,7 +173,7 @@ class Data implements DataInterface
         $currentValue = &$this->data;
         $keyPath = explode('.', $key);
 
-        for ( $i = 0; $i < count($keyPath); $i++ ) {
+        for ($i = 0; $i < count($keyPath); $i++) {
             $currentKey = $keyPath[$i];
             if (
                 !is_array($currentValue) ||

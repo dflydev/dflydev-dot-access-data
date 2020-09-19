@@ -27,7 +27,7 @@ class Util
      */
     public static function isAssoc(array $arr): bool
     {
-        return !count($arr) || count(array_filter(array_keys($arr),'is_string')) == count($arr);
+        return !count($arr) || count(array_filter(array_keys($arr), 'is_string')) == count($arr);
     }
 
     /**
@@ -43,7 +43,7 @@ class Util
      */
     public static function mergeAssocArray($to, $from, $clobber = true)
     {
-        if ( is_array($from) ) {
+        if (is_array($from)) {
             foreach ($from as $k => $v) {
                 if (!isset($to[$k])) {
                     $to[$k] = $v;
