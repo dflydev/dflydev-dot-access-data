@@ -88,7 +88,7 @@ class DataTest extends TestCase
 
     public function testSet()
     {
-        $data = new Data;
+        $data = new Data();
 
         $this->assertNull($data->get('a'));
         $this->assertNull($data->get('b.c'));
@@ -111,7 +111,7 @@ class DataTest extends TestCase
 
     public function testSetClobberStringInPath()
     {
-        $data = new Data;
+        $data = new Data();
 
         $data->set('a.b.c', 'Should not be able to write to a.b.c.d.e');
 

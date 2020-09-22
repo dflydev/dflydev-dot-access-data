@@ -19,24 +19,24 @@ class Data implements DataInterface, ArrayAccess
     /**
      * Internal representation of data data
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $data;
 
     /**
      * Constructor
      *
-     * @param array|null $data
+     * @param array<string, mixed> $data
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->data = $data ?: [];
+        $this->data = $data;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function append($key, $value = null)
+    public function append(string $key, $value = null): void
     {
         if (0 == strlen($key)) {
             throw new RuntimeException("Key cannot be an empty string");
@@ -60,9 +60,9 @@ class Data implements DataInterface, ArrayAccess
         }
 
         $endKey = array_pop($keyPath);
-        for ( $i = 0; $i < count($keyPath); $i++ ) {
+        for ($i = 0; $i < count($keyPath); $i++) {
             $currentKey =& $keyPath[$i];
-            if ( ! isset($currentValue[$currentKey]) ) {
+            if (! isset($currentValue[$currentKey])) {
                 $currentValue[$currentKey] = [];
             }
             $currentValue =& $currentValue[$currentKey];
@@ -82,7 +82,7 @@ class Data implements DataInterface, ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function set($key, $value = null)
+    public function set(string $key, $value = null): void
     {
         if (0 == strlen($key)) {
             throw new RuntimeException("Key cannot be an empty string");
@@ -98,7 +98,7 @@ class Data implements DataInterface, ArrayAccess
         }
 
         $endKey = array_pop($keyPath);
-        for ( $i = 0; $i < count($keyPath); $i++ ) {
+        for ($i = 0; $i < count($keyPath); $i++) {
             $currentKey =& $keyPath[$i];
             if (!isset($currentValue[$currentKey])) {
                 $currentValue[$currentKey] = [];
@@ -114,7 +114,7 @@ class Data implements DataInterface, ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function remove($key)
+    public function remove(string $key): void
     {
         if (0 == strlen($key)) {
             throw new RuntimeException("Key cannot be an empty string");
@@ -130,7 +130,7 @@ class Data implements DataInterface, ArrayAccess
         }
 
         $endKey = array_pop($keyPath);
-        for ( $i = 0; $i < count($keyPath); $i++ ) {
+        for ($i = 0; $i < count($keyPath); $i++) {
             $currentKey =& $keyPath[$i];
             if (!isset($currentValue[$currentKey])) {
                 return;
@@ -142,15 +142,17 @@ class Data implements DataInterface, ArrayAccess
 
     /**
      * {@inheritdoc}
+     *
+     * @psalm-mutation-free
      */
-    public function get($key, $default = null)
+    public function get(string $key, $default = null)
     {
         $currentValue = $this->data;
         $keyPath = explode('.', $key);
 
-        for ( $i = 0; $i < count($keyPath); $i++ ) {
+        for ($i = 0; $i < count($keyPath); $i++) {
             $currentKey = $keyPath[$i];
-            if (!isset($currentValue[$currentKey]) ) {
+            if (!isset($currentValue[$currentKey])) {
                 return $default;
             }
             if (!is_array($currentValue)) {
@@ -164,13 +166,15 @@ class Data implements DataInterface, ArrayAccess
 
     /**
      * {@inheritdoc}
+     *
+     * @psalm-mutation-free
      */
-    public function has($key)
+    public function has(string $key): bool
     {
         $currentValue = &$this->data;
         $keyPath = explode('.', $key);
 
-        for ( $i = 0; $i < count($keyPath); $i++ ) {
+        for ($i = 0; $i < count($keyPath); $i++) {
             $currentKey = $keyPath[$i];
             if (
                 !is_array($currentValue) ||
@@ -186,8 +190,10 @@ class Data implements DataInterface, ArrayAccess
 
     /**
      * {@inheritdoc}
+     *
+     * @psalm-mutation-free
      */
-    public function getData($key)
+    public function getData(string $key): DataInterface
     {
         $value = $this->get($key);
         if (is_array($value) && Util::isAssoc($value)) {
@@ -200,7 +206,7 @@ class Data implements DataInterface, ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function import(array $data, $clobber = true)
+    public function import(array $data, bool $clobber = true): void
     {
         $this->data = Util::mergeAssocArray($this->data, $data, $clobber);
     }
@@ -208,15 +214,17 @@ class Data implements DataInterface, ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function importData(DataInterface $data, $clobber = true)
+    public function importData(DataInterface $data, bool $clobber = true): void
     {
         $this->import($data->export(), $clobber);
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @psalm-mutation-free
      */
-    public function export()
+    public function export(): array
     {
         return $this->data;
     }

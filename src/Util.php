@@ -19,25 +19,31 @@ class Util
      * Note that this function will return true if an array is empty. Meaning
      * empty arrays will be treated as if they are associative arrays.
      *
-     * @param array $arr
+     * @param array<mixed> $arr
      *
-     * @return boolean
+     * @return bool
+     *
+     * @psalm-pure
      */
-    public static function isAssoc(array $arr)
+    public static function isAssoc(array $arr): bool
     {
-        return (is_array($arr) && (!count($arr) || count(array_filter(array_keys($arr),'is_string')) == count($arr)));
+        return !count($arr) || count(array_filter(array_keys($arr), 'is_string')) == count($arr);
     }
 
     /**
      * Merge contents from one associtative array to another
      *
-     * @param array $to
-     * @param array $from
+     * @param mixed $to
+     * @param mixed $from
      * @param bool  $clobber
+     *
+     * @return mixed
+     *
+     * @psalm-pure
      */
     public static function mergeAssocArray($to, $from, $clobber = true)
     {
-        if ( is_array($from) ) {
+        if (is_array($from)) {
             foreach ($from as $k => $v) {
                 if (!isset($to[$k])) {
                     $to[$k] = $v;
