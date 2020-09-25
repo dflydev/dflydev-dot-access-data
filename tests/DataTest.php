@@ -248,7 +248,7 @@ class DataTest extends TestCase
 
     public function testOffsetSet()
     {
-        $data = new Data;
+        $data = new Data();
 
         $this->assertNull($data['a']);
         $this->assertNull($data['b.c']);
