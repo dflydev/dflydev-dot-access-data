@@ -11,8 +11,9 @@
 
 namespace Dflydev\DotAccessData;
 
-use RuntimeException;
 use ArrayAccess;
+use Dflydev\DotAccessData\Exception\DataException;
+use Dflydev\DotAccessData\Exception\InvalidPathException;
 
 /**
  * @implements ArrayAccess<string, mixed>
@@ -42,7 +43,7 @@ class Data implements DataInterface, ArrayAccess
     public function append(string $key, $value = null): void
     {
         if (0 == strlen($key)) {
-            throw new RuntimeException("Key cannot be an empty string");
+            throw new InvalidPathException("Key cannot be an empty string");
         }
 
         $currentValue =& $this->data;
@@ -88,7 +89,7 @@ class Data implements DataInterface, ArrayAccess
     public function set(string $key, $value = null): void
     {
         if (0 == strlen($key)) {
-            throw new RuntimeException("Key cannot be an empty string");
+            throw new InvalidPathException("Key cannot be an empty string");
         }
 
         $currentValue =& $this->data;
@@ -107,7 +108,7 @@ class Data implements DataInterface, ArrayAccess
                 $currentValue[$currentKey] = [];
             }
             if (!is_array($currentValue[$currentKey])) {
-                throw new RuntimeException("Key path at $currentKey of $key cannot be indexed into (is not an array)");
+                throw new DataException("Key path at $currentKey of $key cannot be indexed into (is not an array)");
             }
             $currentValue =& $currentValue[$currentKey];
         }
@@ -120,7 +121,7 @@ class Data implements DataInterface, ArrayAccess
     public function remove(string $key): void
     {
         if (0 == strlen($key)) {
-            throw new RuntimeException("Key cannot be an empty string");
+            throw new InvalidPathException("Key cannot be an empty string");
         }
 
         $currentValue =& $this->data;
@@ -203,7 +204,7 @@ class Data implements DataInterface, ArrayAccess
             return new Data($value);
         }
 
-        throw new RuntimeException("Value at '$key' could not be represented as a DataInterface");
+        throw new DataException("Value at '$key' could not be represented as a DataInterface");
     }
 
     /**

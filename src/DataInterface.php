@@ -11,6 +11,9 @@
 
 namespace Dflydev\DotAccessData;
 
+use Dflydev\DotAccessData\Exception\DataException;
+use Dflydev\DotAccessData\Exception\InvalidPathException;
+
 interface DataInterface
 {
     /**
@@ -18,6 +21,8 @@ interface DataInterface
      *
      * @param string $key
      * @param mixed  $value
+     *
+     * @throws InvalidPathException if the given path is empty
      */
     public function append(string $key, $value = null): void;
 
@@ -26,6 +31,9 @@ interface DataInterface
      *
      * @param string $key
      * @param mixed  $value
+     *
+     * @throws InvalidPathException if the given path is empty
+     * @throws DataException if the given path does not target an array
      */
     public function set(string $key, $value = null): void;
 
@@ -33,6 +41,8 @@ interface DataInterface
      * Remove a key
      *
      * @param string $key
+     *
+     * @throws InvalidPathException if the given path is empty
      */
     public function remove(string $key): void;
 
@@ -65,6 +75,8 @@ interface DataInterface
      * @param string $key
      *
      * @return DataInterface
+     *
+     * @throws DataException if the given path does not reference an array
      *
      * @psalm-mutation-free
      */
