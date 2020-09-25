@@ -21,6 +21,14 @@ use Dflydev\DotAccessData\Exception\InvalidPathException;
 class Data implements DataInterface, ArrayAccess
 {
     /**
+     * Allowed path delimiters
+     * @var array<int, string>
+     *
+     * @psalm-mutation-free
+     */
+    private $delimiters = [];
+
+    /**
      * Internal representation of data data
      *
      * @var array<string, mixed>
@@ -31,10 +39,13 @@ class Data implements DataInterface, ArrayAccess
      * Constructor
      *
      * @param array<string, mixed> $data
+     * @param array<int, string>   $delimiters
      */
-    public function __construct(array $data = [])
+    public function __construct(array $data = [], array $delimiters = ['.'])
     {
         $this->data = $data;
+
+        $this->delimiters = $delimiters;
     }
 
     /**
@@ -189,7 +200,7 @@ class Data implements DataInterface, ArrayAccess
     {
         $value = $this->get($key);
         if (is_array($value) && Util::isAssoc($value)) {
-            return new Data($value);
+            return new Data($value, $this->delimiters);
         }
 
         throw new DataException("Value at '$key' could not be represented as a DataInterface");
@@ -260,7 +271,7 @@ class Data implements DataInterface, ArrayAccess
      *
      * @psalm-return non-empty-list<string>
      *
-     * @psalm-pure
+     * @psalm-mutation-free
      */
     protected function keyToPathArray(string $path): array
     {
@@ -268,6 +279,9 @@ class Data implements DataInterface, ArrayAccess
             throw new InvalidPathException('Path cannot be an empty string');
         }
 
-        return \explode('.', $path);
+        $path = \str_replace($this->delimiters, $this->delimiters[0], $path);
+
+        // @phpstan-ignore-next-line
+        return \explode($this->delimiters[0], $path);
     }
 }

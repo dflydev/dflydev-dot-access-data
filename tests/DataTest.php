@@ -90,6 +90,31 @@ class DataTest extends TestCase
         $data->append('', 'broken');
     }
 
+    public function testAppendWithDifferentDelimiters()
+    {
+        $data = new Data($this->getSampleData(), ['.', '/']);
+
+        $data->append('a', 'B');
+        $data->append('c', 'c4');
+        $data->append('b.c', 'C4');
+        $data->append('b/d.d3', 'D3b');
+        $data->append('b.d/d4', 'D');
+        $data->append('e', 'E');
+        $data->append('f.a', 'b');
+        $data->append('h/i', 'I2');
+        $data->append('i.k.l', 'L');
+
+        $this->assertEquals(['A', 'B'], $data->get('a'));
+        $this->assertEquals(['c1', 'c2', 'c3', 'c4'], $data->get('c'));
+        $this->assertEquals(['C1', 'C2', 'C3', 'C4'], $data->get('b/c'));
+        $this->assertEquals(['D3', 'D3b'], $data->get('b.d.d3'));
+        $this->assertEquals(['D'], $data->get('b/d/d4'));
+        $this->assertEquals(['E'], $data->get('e'));
+        $this->assertEquals(['b'], $data->get('f/a'));
+        $this->assertEquals(['I', 'I2'], $data->get('h.i'));
+        $this->assertEquals(['L'], $data->get('i/k/l'));
+    }
+
     public function testSet()
     {
         $data = new Data();
@@ -111,6 +136,25 @@ class DataTest extends TestCase
         $this->expectException(InvalidPathException::class);
 
         $data->set('', 'broken');
+    }
+
+    public function testSetWithDifferentDelimiters()
+    {
+        $data = new Data([], ['.', '/']);
+
+        $this->assertNull($data->get('a'));
+        $this->assertNull($data->get('b.c'));
+        $this->assertNull($data->get('d/e'));
+
+        $data->set('a', 'A');
+        $data->set('b/c', 'C');
+        $data->set('d.e', ['f' => 'F', 'g' => 'G']);
+
+        $this->assertEquals('A', $data->get('a'));
+        $this->assertEquals(['c' => 'C'], $data->get('b'));
+        $this->assertEquals('C', $data->get('b.c'));
+        $this->assertEquals('F', $data->get('d/e/f'));
+        $this->assertEquals(['e' => ['f' => 'F', 'g' => 'G']], $data->get('d'));
     }
 
     public function testSetClobberStringInPath()
@@ -146,11 +190,71 @@ class DataTest extends TestCase
         $data->remove('', 'broken');
     }
 
+    public function testRemoveWithDifferentDelimiters()
+    {
+        $data = new Data($this->getSampleData(), ['.', '/']);
+
+        $data->remove('a');
+        $data->remove('b.c');
+        $data->remove('b/d/d3');
+        $data->remove('d');
+        $data->remove('d.e/f');
+        $data->remove('empty.path');
+
+        $this->assertNull($data->get('a'));
+        $this->assertNull($data->get('b/c'));
+        $this->assertNull($data->get('b.d.d3'));
+        $this->assertNull(null);
+        $this->assertEquals('D2', $data->get('b.d.d2'));
+    }
+
     public function testGet()
     {
         $data = new Data($this->getSampleData());
 
         $this->runSampleDataTests($data);
+    }
+
+    public function testGetWithDifferentDelimiters()
+    {
+        $sample = [
+            'nested' => [
+                'path' => [
+                    'example' => true,
+                ]
+            ],
+        ];
+
+        $data = new Data($sample);
+
+        $this->assertTrue($data->get('nested.path.example'));
+
+        $this->assertNull($data->get('nested/path/example'));
+        $this->assertNull($data->get('nested.path/example'));
+        $this->assertNull($data->get('nested/path.example'));
+
+        $data = new Data($sample, ['.']);
+
+        $this->assertTrue($data->get('nested.path.example'));
+
+        $this->assertNull($data->get('nested/path/example'));
+        $this->assertNull($data->get('nested.path/example'));
+        $this->assertNull($data->get('nested/path.example'));
+
+        $data = new Data($sample, ['/']);
+
+        $this->assertTrue($data->get('nested/path/example'));
+
+        $this->assertNull($data->get('nested.path.example'));
+        $this->assertNull($data->get('nested.path/example'));
+        $this->assertNull($data->get('nested/path.example'));
+
+        $data = new Data($sample, ['.', '/']);
+
+        $this->assertTrue($data->get('nested.path.example'));
+        $this->assertTrue($data->get('nested/path/example'));
+        $this->assertTrue($data->get('nested.path/example'));
+        $this->assertTrue($data->get('nested/path.example'));
     }
 
     public function testHas()
@@ -173,6 +277,23 @@ class DataTest extends TestCase
         $data->has('', 'broken');
     }
 
+    public function testHasWithDifferentDelimiters()
+    {
+        $data = new Data($this->getSampleData(), ['.', '/']);
+
+        foreach (
+            ['a', 'i', 'b.d', 'b/d', 'f.g.h', 'f/g/h', 'h.i', 'h/i', 'b.d.d1', 'b/d/d1'] as $existentKey
+        ) {
+            $this->assertTrue($data->has($existentKey));
+        }
+
+        foreach (
+            ['p', 'b.b1', 'b/b1', 'b.c.C1', 'b/c/C1', 'h.i.I', 'h/i/I', 'b.d.d1.D1', 'b/d/d1/D1'] as $notExistentKey
+        ) {
+            $this->assertFalse($data->has($notExistentKey));
+        }
+    }
+
     public function testGetData()
     {
         $wrappedData = new Data([
@@ -188,6 +309,31 @@ class DataTest extends TestCase
         $this->expectException(DataException::class);
 
         $data = $wrappedData->getData('wrapped.sampleData.a');
+    }
+
+    public function testGetDataUsesSameDelimiters()
+    {
+        $wrappedData = new Data([
+            'wrapped' => [
+                'sampleData' => $this->getSampleData(),
+            ],
+        ], ['/']);
+
+        $data = $wrappedData->getData('wrapped/sampleData');
+
+        $this->assertSame('B', $data->get('b/b'));
+        $this->assertNull($data->get('b.b'));
+
+        $wrappedData = new Data([
+            'wrapped' => [
+                'sampleData' => $this->getSampleData(),
+            ],
+        ], ['.']);
+
+        $data = $wrappedData->getData('wrapped.sampleData');
+
+        $this->assertSame('B', $data->get('b.b'));
+        $this->assertNull($data->get('b/b'));
     }
 
     public function testImport()
@@ -249,6 +395,19 @@ class DataTest extends TestCase
         $this->assertNull($data['f.g.h.i']);
     }
 
+    public function testOffsetGetWithDifferentDelimiters()
+    {
+        $data = new Data($this->getSampleData(), ['.', '/']);
+
+        $this->assertEquals('A', $data['a']);
+        $this->assertEquals('B', $data['b/b']);
+        $this->assertEquals(['C1', 'C2', 'C3'], $data['b.c']);
+        $this->assertEquals('D3', $data['b/d/d3']);
+        $this->assertEquals(['c1', 'c2', 'c3'], $data['c']);
+        $this->assertNull($data['foo'], 'Foo should not exist');
+        $this->assertNull($data['f.g/h.i']);
+    }
+
     public function testOffsetSet()
     {
         $data = new Data();
@@ -272,6 +431,33 @@ class DataTest extends TestCase
         $data->set('', 'broken');
     }
 
+    public function testOffsetSetWithDifferentDelimiters()
+    {
+        $data = new Data([], ['.', '/']);
+
+        $this->assertNull($data['a']);
+        $this->assertNull($data['b.c']);
+        $this->assertNull($data['b/c']);
+        $this->assertNull($data['d.e']);
+        $this->assertNull($data['d/e']);
+
+        $data['a'] = 'A';
+        $data['b.c'] = 'C';
+        $data['d/e'] = ['f' => 'F', 'g' => 'G'];
+
+        $this->assertEquals('A', $data['a']);
+        $this->assertEquals(['c' => 'C'], $data['b']);
+        $this->assertEquals('C', $data['b.c']);
+        $this->assertEquals('C', $data['b/c']);
+        $this->assertEquals('F', $data['d.e.f']);
+        $this->assertEquals('F', $data['d/e/f']);
+        $this->assertEquals(['e' => ['f' => 'F', 'g' => 'G']], $data['d']);
+
+        $this->expectException(InvalidPathException::class);
+
+        $data->set('', 'broken');
+    }
+
     public function testOffsetUnset()
     {
         $data = new Data($this->getSampleData());
@@ -288,6 +474,28 @@ class DataTest extends TestCase
         $this->assertNull($data['b.d.d3']);
         $this->assertNull(null);
         $this->assertEquals('D2', $data['b.d.d2']);
+
+        $this->expectException(InvalidPathException::class);
+
+        unset($data['']);
+    }
+
+    public function testOffsetUnsetWithDifferentDelimiters()
+    {
+        $data = new Data($this->getSampleData(), ['.', '/']);
+
+        unset($data['a']);
+        unset($data['b.c']);
+        unset($data['b/d/d3']);
+        unset($data['d']);
+        unset($data['d/e.f']);
+        unset($data['empty.path']);
+
+        $this->assertNull($data['a']);
+        $this->assertNull($data['b/c']);
+        $this->assertNull($data['b.d.d3']);
+        $this->assertNull(null);
+        $this->assertEquals('D2', $data['b.d/d2']);
 
         $this->expectException(InvalidPathException::class);
 
