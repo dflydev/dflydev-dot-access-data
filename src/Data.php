@@ -20,6 +20,8 @@ use Dflydev\DotAccessData\Exception\InvalidPathException;
  */
 class Data implements DataInterface, ArrayAccess
 {
+    private const DELIMITERS = ['.', '/'];
+
     /**
      * Internal representation of data data
      *
@@ -267,6 +269,8 @@ class Data implements DataInterface, ArrayAccess
         if (\strlen($path) === 0) {
             throw new InvalidPathException('Path cannot be an empty string');
         }
+
+        $path = \str_replace(self::DELIMITERS, '.', $path);
 
         return \explode('.', $path);
     }
