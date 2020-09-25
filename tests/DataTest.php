@@ -240,15 +240,11 @@ class DataTest extends TestCase
         $this->assertEquals(['c1', 'c2', 'c3'], $data['c']);
         $this->assertNull($data['foo'], 'Foo should not exist');
         $this->assertNull($data['f.g.h.i']);
-
-        $this->expectException(RuntimeException::class);
-
-        $data = $wrappedData->getData('wrapped.sampleData.a');
     }
 
     public function testOffsetSet()
     {
-        $data = new Data;
+        $data = new Data();
 
         $this->assertNull($data['a']);
         $this->assertNull($data['b.c']);

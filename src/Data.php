@@ -14,6 +14,9 @@ namespace Dflydev\DotAccessData;
 use RuntimeException;
 use ArrayAccess;
 
+/**
+ * @implements ArrayAccess<string, mixed>
+ */
 class Data implements DataInterface, ArrayAccess
 {
     /**
@@ -247,6 +250,8 @@ class Data implements DataInterface, ArrayAccess
 
     /**
      * {@inheritdoc}
+     *
+     * @param string $key
      */
     public function offsetSet($key, $value)
     {
@@ -260,5 +265,4 @@ class Data implements DataInterface, ArrayAccess
     {
         $this->remove($key);
     }
-
 }
