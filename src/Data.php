@@ -42,12 +42,8 @@ class Data implements DataInterface, ArrayAccess
      */
     public function append(string $key, $value = null): void
     {
-        if (0 == strlen($key)) {
-            throw new InvalidPathException("Key cannot be an empty string");
-        }
-
         $currentValue =& $this->data;
-        $keyPath = explode('.', $key);
+        $keyPath = $this->keyToPathArray($key);
 
         if (1 == count($keyPath)) {
             if (!isset($currentValue[$key])) {
@@ -88,12 +84,8 @@ class Data implements DataInterface, ArrayAccess
      */
     public function set(string $key, $value = null): void
     {
-        if (0 == strlen($key)) {
-            throw new InvalidPathException("Key cannot be an empty string");
-        }
-
         $currentValue =& $this->data;
-        $keyPath = explode('.', $key);
+        $keyPath = $this->keyToPathArray($key);
 
         if (1 == count($keyPath)) {
             $currentValue[$key] = $value;
@@ -120,12 +112,8 @@ class Data implements DataInterface, ArrayAccess
      */
     public function remove(string $key): void
     {
-        if (0 == strlen($key)) {
-            throw new InvalidPathException("Key cannot be an empty string");
-        }
-
         $currentValue =& $this->data;
-        $keyPath = explode('.', $key);
+        $keyPath = $this->keyToPathArray($key);
 
         if (1 == count($keyPath)) {
             unset($currentValue[$key]);
@@ -152,7 +140,7 @@ class Data implements DataInterface, ArrayAccess
     public function get(string $key, $default = null)
     {
         $currentValue = $this->data;
-        $keyPath = explode('.', $key);
+        $keyPath = $this->keyToPathArray($key);
 
         for ($i = 0; $i < count($keyPath); $i++) {
             $currentKey = $keyPath[$i];
@@ -176,7 +164,7 @@ class Data implements DataInterface, ArrayAccess
     public function has(string $key): bool
     {
         $currentValue = &$this->data;
-        $keyPath = explode('.', $key);
+        $keyPath = $this->keyToPathArray($key);
 
         for ($i = 0; $i < count($keyPath); $i++) {
             $currentKey = $keyPath[$i];
@@ -265,5 +253,21 @@ class Data implements DataInterface, ArrayAccess
     public function offsetUnset($key)
     {
         $this->remove($key);
+    }
+
+    /**
+     * @return string[]
+     *
+     * @psalm-return non-empty-list<string>
+     *
+     * @psalm-pure
+     */
+    protected function keyToPathArray(string $path): array
+    {
+        if (\strlen($path) === 0) {
+            throw new InvalidPathException('Path cannot be an empty string');
+        }
+
+        return \explode('.', $path);
     }
 }

@@ -56,6 +56,9 @@ class DataTest extends TestCase
         $this->assertNull($data->get('f.g.h.i'));
         $this->assertEquals($data->get('foo', 'default-value-1'), 'default-value-1', 'Return default value');
         $this->assertEquals($data->get('f.g.h.i', 'default-value-2'), 'default-value-2');
+
+        $this->expectException(InvalidPathException::class);
+        $data->get('', 'broken');
     }
 
     public function testAppend()
@@ -165,6 +168,9 @@ class DataTest extends TestCase
         ) {
             $this->assertFalse($data->has($notExistentKey));
         }
+
+        $this->expectException(InvalidPathException::class);
+        $data->has('', 'broken');
     }
 
     public function testGetData()
