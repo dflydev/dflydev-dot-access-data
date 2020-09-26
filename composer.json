@@ -20,6 +20,11 @@
             "name": "Carlos Frutos",
             "email": "carlos@kiwing.it",
             "homepage": "https://github.com/cfrutos"
+        },
+        {
+            "name": "Colin O'Dell",
+            "email": "colinodell@gmail.com",
+            "homepage": "https://www.colinodell.com"
         }
     ],
     "require": {
