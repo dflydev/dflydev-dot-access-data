@@ -49,23 +49,8 @@ class Data implements DataInterface, ArrayAccess
         $currentValue =& $this->data;
         $keyPath = $this->keyToPathArray($key);
 
-        if (1 == count($keyPath)) {
-            if (!isset($currentValue[$key])) {
-                $currentValue[$key] = [];
-            }
-            if (!is_array($currentValue[$key])) {
-                // Promote this key to an array.
-                // TODO: Is this really what we want to do?
-                $currentValue[$key] = [$currentValue[$key]];
-            }
-            $currentValue[$key][] = $value;
-
-            return;
-        }
-
         $endKey = array_pop($keyPath);
-        for ($i = 0; $i < count($keyPath); $i++) {
-            $currentKey =& $keyPath[$i];
+        foreach ($keyPath as $currentKey) {
             if (! isset($currentValue[$currentKey])) {
                 $currentValue[$currentKey] = [];
             }
@@ -75,11 +60,13 @@ class Data implements DataInterface, ArrayAccess
         if (!isset($currentValue[$endKey])) {
             $currentValue[$endKey] = [];
         }
+
         if (!is_array($currentValue[$endKey])) {
+            // Promote this key to an array.
+            // TODO: Is this really what we want to do?
             $currentValue[$endKey] = [$currentValue[$endKey]];
         }
-        // Promote this key to an array.
-        // TODO: Is this really what we want to do?
+
         $currentValue[$endKey][] = $value;
     }
 
@@ -91,15 +78,8 @@ class Data implements DataInterface, ArrayAccess
         $currentValue =& $this->data;
         $keyPath = $this->keyToPathArray($key);
 
-        if (1 == count($keyPath)) {
-            $currentValue[$key] = $value;
-
-            return;
-        }
-
         $endKey = array_pop($keyPath);
-        for ($i = 0; $i < count($keyPath); $i++) {
-            $currentKey =& $keyPath[$i];
+        foreach ($keyPath as $currentKey) {
             if (!isset($currentValue[$currentKey])) {
                 $currentValue[$currentKey] = [];
             }
@@ -119,15 +99,8 @@ class Data implements DataInterface, ArrayAccess
         $currentValue =& $this->data;
         $keyPath = $this->keyToPathArray($key);
 
-        if (1 == count($keyPath)) {
-            unset($currentValue[$key]);
-
-            return;
-        }
-
         $endKey = array_pop($keyPath);
-        for ($i = 0; $i < count($keyPath); $i++) {
-            $currentKey =& $keyPath[$i];
+        foreach ($keyPath as $currentKey) {
             if (!isset($currentValue[$currentKey])) {
                 return;
             }
@@ -146,8 +119,7 @@ class Data implements DataInterface, ArrayAccess
         $currentValue = $this->data;
         $keyPath = $this->keyToPathArray($key);
 
-        for ($i = 0; $i < count($keyPath); $i++) {
-            $currentKey = $keyPath[$i];
+        foreach ($keyPath as $currentKey) {
             if (!isset($currentValue[$currentKey])) {
                 return $default;
             }
@@ -168,10 +140,8 @@ class Data implements DataInterface, ArrayAccess
     public function has(string $key): bool
     {
         $currentValue = &$this->data;
-        $keyPath = $this->keyToPathArray($key);
 
-        for ($i = 0; $i < count($keyPath); $i++) {
-            $currentKey = $keyPath[$i];
+        foreach ($this->keyToPathArray($key) as $currentKey) {
             if (
                 !is_array($currentValue) ||
                 !array_key_exists($currentKey, $currentValue)
