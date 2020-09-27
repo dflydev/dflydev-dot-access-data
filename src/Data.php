@@ -84,7 +84,7 @@ class Data implements DataInterface, ArrayAccess
                 $currentValue[$currentKey] = [];
             }
             if (!is_array($currentValue[$currentKey])) {
-                throw new DataException("Key path at $currentKey of $key cannot be indexed into (is not an array)");
+                throw new DataException(sprintf('Key path "%s" within "%s" cannot be indexed into (is not an array)', $currentKey, self::formatPath($key)));
             }
             $currentValue =& $currentValue[$currentKey];
         }
@@ -166,7 +166,7 @@ class Data implements DataInterface, ArrayAccess
             return new Data($value);
         }
 
-        throw new DataException("Value at '$key' could not be represented as a DataInterface");
+        throw new DataException(sprintf('Value at "%s" could not be represented as a DataInterface', self::formatPath($key)));
     }
 
     /**
@@ -247,5 +247,21 @@ class Data implements DataInterface, ArrayAccess
         $path = \str_replace(self::DELIMITERS, '.', $path);
 
         return \explode('.', $path);
+    }
+
+    /**
+     * @param string|string[] $path
+     *
+     * @return string
+     *
+     * @psalm-pure
+     */
+    protected static function formatPath($path): string
+    {
+        if (is_string($path)) {
+            $path = self::keyToPathArray($path);
+        }
+
+        return implode(' » ', $path);
     }
 }
