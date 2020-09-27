@@ -47,7 +47,7 @@ class Data implements DataInterface, ArrayAccess
     public function append(string $key, $value = null): void
     {
         $currentValue =& $this->data;
-        $keyPath = $this->keyToPathArray($key);
+        $keyPath = self::keyToPathArray($key);
 
         $endKey = array_pop($keyPath);
         foreach ($keyPath as $currentKey) {
@@ -76,7 +76,7 @@ class Data implements DataInterface, ArrayAccess
     public function set(string $key, $value = null): void
     {
         $currentValue =& $this->data;
-        $keyPath = $this->keyToPathArray($key);
+        $keyPath = self::keyToPathArray($key);
 
         $endKey = array_pop($keyPath);
         foreach ($keyPath as $currentKey) {
@@ -97,7 +97,7 @@ class Data implements DataInterface, ArrayAccess
     public function remove(string $key): void
     {
         $currentValue =& $this->data;
-        $keyPath = $this->keyToPathArray($key);
+        $keyPath = self::keyToPathArray($key);
 
         $endKey = array_pop($keyPath);
         foreach ($keyPath as $currentKey) {
@@ -117,7 +117,7 @@ class Data implements DataInterface, ArrayAccess
     public function get(string $key, $default = null)
     {
         $currentValue = $this->data;
-        $keyPath = $this->keyToPathArray($key);
+        $keyPath = self::keyToPathArray($key);
 
         foreach ($keyPath as $currentKey) {
             if (!isset($currentValue[$currentKey])) {
@@ -141,7 +141,7 @@ class Data implements DataInterface, ArrayAccess
     {
         $currentValue = &$this->data;
 
-        foreach ($this->keyToPathArray($key) as $currentKey) {
+        foreach (self::keyToPathArray($key) as $currentKey) {
             if (
                 !is_array($currentValue) ||
                 !array_key_exists($currentKey, $currentValue)
@@ -230,13 +230,15 @@ class Data implements DataInterface, ArrayAccess
     }
 
     /**
+     * @param string $path
+     *
      * @return string[]
      *
      * @psalm-return non-empty-list<string>
      *
      * @psalm-pure
      */
-    protected function keyToPathArray(string $path): array
+    protected static function keyToPathArray(string $path): array
     {
         if (\strlen($path) === 0) {
             throw new InvalidPathException('Path cannot be an empty string');
