@@ -121,6 +121,15 @@ isset($data['name']) === $data->has('name');
 unset($data['name']);
 ```
 
+`/` can also be used as a path delimiter:
+
+```php
+$data->set('a/b/c', 'd');
+echo $data->get('a/b/c'); // "d"
+
+$data->get('a/b/c') === $data->get('a.b.c'); // true
+```
+
 License
 -------
 
