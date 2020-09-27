@@ -191,10 +191,18 @@ class DataTest extends TestCase
         $data = $wrappedData->getData('wrapped.sampleData');
 
         $this->runSampleDataTests($data);
+    }
+
+    public function testGetDataOnNonArrayValue()
+    {
+        $data = new Data([
+            'foo' => 'bar',
+        ]);
 
         $this->expectException(DataException::class);
+        $this->expectExceptionMessageRegExp('/could not be represented as a DataInterface/');
 
-        $data = $wrappedData->getData('wrapped.sampleData.a');
+        $data->getData('foo');
     }
 
     public function testImport()
