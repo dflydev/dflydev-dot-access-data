@@ -16,6 +16,7 @@ namespace Dflydev\DotAccessData;
 use ArrayAccess;
 use Dflydev\DotAccessData\Exception\DataException;
 use Dflydev\DotAccessData\Exception\InvalidPathException;
+use Dflydev\DotAccessData\Exception\MissingPathException;
 
 /**
  * @implements ArrayAccess<string, mixed>
@@ -116,16 +117,21 @@ class Data implements DataInterface, ArrayAccess
      */
     public function get(string $key, $default = null)
     {
+        /** @psalm-suppress ImpureFunctionCall */
+        $hasDefault = \func_num_args() > 1;
+
         $currentValue = $this->data;
         $keyPath = self::keyToPathArray($key);
 
         foreach ($keyPath as $currentKey) {
-            if (!isset($currentValue[$currentKey])) {
-                return $default;
+            if (!is_array($currentValue) || !isset($currentValue[$currentKey])) {
+                if ($hasDefault) {
+                    return $default;
+                }
+
+                throw new MissingPathException($key, sprintf('No data exists at the given path: "%s"', self::formatPath($keyPath)));
             }
-            if (!is_array($currentValue)) {
-                return $default;
-            }
+
             $currentValue = $currentValue[$currentKey];
         }
 
@@ -208,7 +214,7 @@ class Data implements DataInterface, ArrayAccess
      */
     public function offsetGet($key)
     {
-        return $this->get($key);
+        return $this->get($key, null);
     }
 
     /**

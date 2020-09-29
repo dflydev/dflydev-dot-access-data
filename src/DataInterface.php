@@ -58,7 +58,8 @@ interface DataInterface
     /**
      * Get the raw value for a key
      *
-     * If the key does not exist, the provided default value (or null) will be returned instead.
+     * If the key does not exist, an optional default value can be returned instead.
+     * If no default is provided then an exception will be thrown instead.
      *
      * @param string $key
      * @param mixed $default
@@ -66,6 +67,7 @@ interface DataInterface
      * @return mixed
      *
      * @throws InvalidPathException if the given key is empty
+     * @throws InvalidPathException if the given key does not exist and no default value was given
      *
      * @psalm-mutation-free
      */

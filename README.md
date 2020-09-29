@@ -41,6 +41,13 @@ $data->has('a.b.c');
 
 // false
 $data->has('a.b.d.j');
+
+
+// 'some-default-value'
+$data->get('some.path.that.does.not.exist', 'some-default-value');
+
+// throws a MissingPathException because no default was given
+$data->get('some.path.that.does.not.exist');
 ```
 
 A more concrete example:

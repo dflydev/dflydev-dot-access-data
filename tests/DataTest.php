@@ -143,9 +143,9 @@ class DataTest extends TestCase
         $data->remove('d.e.f');
         $data->remove('empty.path');
 
-        $this->assertNull($data->get('a'));
-        $this->assertNull($data->get('b/c'));
-        $this->assertNull($data->get('b.d.d3'));
+        $this->assertNull($data->get('a', null));
+        $this->assertNull($data->get('b/c', null));
+        $this->assertNull($data->get('b.d.d3', null));
         $this->assertNull(null);
         $this->assertEquals('D2', $data->get('b.d.d2'));
 
@@ -159,6 +159,21 @@ class DataTest extends TestCase
         $data = new Data($this->getSampleData());
 
         $this->runSampleDataTests($data);
+    }
+
+    public function testGetWhenValueDoesNotExist()
+    {
+        $data = new Data($this->getSampleData());
+
+        // With a default parameter given:
+        $this->assertSame('DEFAULT', $data->get('foo.bar', 'DEFAULT'));
+        $this->assertSame(false, $data->get('foo.bar', false));
+        $this->assertSame(null, $data->get('foo/bar', null));
+
+        // Without a default parameter:
+        $this->expectException(DataException::class);
+        $this->expectExceptionMessage('No data exists at the given path: "foo » bar"');
+        $data->get('foo.bar');
     }
 
     public function testHas()
