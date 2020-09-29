@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is a part of dflydev/dot-access-data.
  *
@@ -63,6 +65,7 @@ class DataTest extends TestCase
         $this->assertEquals($data->get('f/g/h/i', 'default-value-2'), 'default-value-2');
 
         $this->expectException(InvalidPathException::class);
+        $this->expectExceptionMessage('Path cannot be an empty string');
         $data->get('', 'broken');
     }
 
@@ -91,7 +94,7 @@ class DataTest extends TestCase
         $this->assertEquals(['L'], $data->get('i.k.l'));
 
         $this->expectException(InvalidPathException::class);
-
+        $this->expectExceptionMessage('Path cannot be an empty string');
         $data->append('', 'broken');
     }
 
@@ -114,7 +117,7 @@ class DataTest extends TestCase
         $this->assertEquals(['e' => ['f' => 'F', 'g' => 'G']], $data->get('d'));
 
         $this->expectException(InvalidPathException::class);
-
+        $this->expectExceptionMessage('Path cannot be an empty string');
         $data->set('', 'broken');
     }
 
@@ -125,7 +128,7 @@ class DataTest extends TestCase
         $data->set('a.b.c', 'Should not be able to write to a.b.c.d.e');
 
         $this->expectException(DataException::class);
-
+        $this->expectExceptionMessage('Key path "c" within "a » b » c » d » e" cannot be indexed into (is not an array)');
         $data->set('a.b.c.d.e', 'broken');
     }
 
@@ -147,7 +150,7 @@ class DataTest extends TestCase
         $this->assertEquals('D2', $data->get('b.d.d2'));
 
         $this->expectException(InvalidPathException::class);
-
+        $this->expectExceptionMessage('Path cannot be an empty string');
         $data->remove('', 'broken');
     }
 
@@ -175,6 +178,7 @@ class DataTest extends TestCase
         }
 
         $this->expectException(InvalidPathException::class);
+        $this->expectExceptionMessage('Path cannot be an empty string');
         $data->has('', 'broken');
     }
 
@@ -189,10 +193,17 @@ class DataTest extends TestCase
         $data = $wrappedData->getData('wrapped.sampleData');
 
         $this->runSampleDataTests($data);
+    }
+
+    public function testGetDataOnNonArrayValue()
+    {
+        $data = new Data([
+            'foo' => 'bar',
+        ]);
 
         $this->expectException(DataException::class);
-
-        $data = $wrappedData->getData('wrapped.sampleData.a');
+        $this->expectExceptionMessage('Value at "foo" could not be represented as a DataInterface');
+        $data->getData('foo');
     }
 
     public function testImport()
@@ -277,7 +288,7 @@ class DataTest extends TestCase
         $this->assertEquals(['e' => ['f' => 'F', 'g' => 'G']], $data['d']);
 
         $this->expectException(InvalidPathException::class);
-
+        $this->expectExceptionMessage('Path cannot be an empty string');
         $data->set('', 'broken');
     }
 
@@ -299,7 +310,7 @@ class DataTest extends TestCase
         $this->assertEquals('D2', $data['b.d.d2']);
 
         $this->expectException(InvalidPathException::class);
-
+        $this->expectExceptionMessage('Path cannot be an empty string');
         unset($data['']);
     }
 }

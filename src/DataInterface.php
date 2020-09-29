@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is a part of dflydev/dot-access-data.
  *
@@ -19,40 +21,51 @@ interface DataInterface
     /**
      * Append a value to a key (assumes key refers to an array value)
      *
+     * If the key does not yet exist it will be created.
+     * If the key references a non-array it's existing contents will be added into a new array before appending the new value.
+     *
      * @param string $key
      * @param mixed  $value
      *
-     * @throws InvalidPathException if the given path is empty
+     * @throws InvalidPathException if the given key is empty
      */
     public function append(string $key, $value = null): void;
 
     /**
      * Set a value for a key
      *
+     * If the key does not yet exist it will be created.
+     *
      * @param string $key
      * @param mixed  $value
      *
-     * @throws InvalidPathException if the given path is empty
-     * @throws DataException if the given path does not target an array
+     * @throws InvalidPathException if the given key is empty
+     * @throws DataException if the given key does not target an array
      */
     public function set(string $key, $value = null): void;
 
     /**
      * Remove a key
      *
+     * No exception will be thrown if the key does not exist
+     *
      * @param string $key
      *
-     * @throws InvalidPathException if the given path is empty
+     * @throws InvalidPathException if the given key is empty
      */
     public function remove(string $key): void;
 
     /**
      * Get the raw value for a key
      *
+     * If the key does not exist, the provided default value (or null) will be returned instead.
+     *
      * @param string $key
      * @param mixed $default
      *
      * @return mixed
+     *
+     * @throws InvalidPathException if the given key is empty
      *
      * @psalm-mutation-free
      */
@@ -65,6 +78,8 @@ interface DataInterface
      *
      * @return bool
      *
+     * @throws InvalidPathException if the given key is empty
+     *
      * @psalm-mutation-free
      */
     public function has(string $key): bool;
@@ -76,7 +91,8 @@ interface DataInterface
      *
      * @return DataInterface
      *
-     * @throws DataException if the given path does not reference an array
+     * @throws InvalidPathException if the given key is empty
+     * @throws DataException if the given key does not reference an array
      *
      * @psalm-mutation-free
      */

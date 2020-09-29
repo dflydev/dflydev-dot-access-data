@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is a part of dflydev/dot-access-data.
  *
@@ -45,25 +47,10 @@ class Data implements DataInterface, ArrayAccess
     public function append(string $key, $value = null): void
     {
         $currentValue =& $this->data;
-        $keyPath = $this->keyToPathArray($key);
-
-        if (1 == count($keyPath)) {
-            if (!isset($currentValue[$key])) {
-                $currentValue[$key] = [];
-            }
-            if (!is_array($currentValue[$key])) {
-                // Promote this key to an array.
-                // TODO: Is this really what we want to do?
-                $currentValue[$key] = [$currentValue[$key]];
-            }
-            $currentValue[$key][] = $value;
-
-            return;
-        }
+        $keyPath = self::keyToPathArray($key);
 
         $endKey = array_pop($keyPath);
-        for ($i = 0; $i < count($keyPath); $i++) {
-            $currentKey =& $keyPath[$i];
+        foreach ($keyPath as $currentKey) {
             if (! isset($currentValue[$currentKey])) {
                 $currentValue[$currentKey] = [];
             }
@@ -73,11 +60,13 @@ class Data implements DataInterface, ArrayAccess
         if (!isset($currentValue[$endKey])) {
             $currentValue[$endKey] = [];
         }
+
         if (!is_array($currentValue[$endKey])) {
+            // Promote this key to an array.
+            // TODO: Is this really what we want to do?
             $currentValue[$endKey] = [$currentValue[$endKey]];
         }
-        // Promote this key to an array.
-        // TODO: Is this really what we want to do?
+
         $currentValue[$endKey][] = $value;
     }
 
@@ -87,22 +76,15 @@ class Data implements DataInterface, ArrayAccess
     public function set(string $key, $value = null): void
     {
         $currentValue =& $this->data;
-        $keyPath = $this->keyToPathArray($key);
-
-        if (1 == count($keyPath)) {
-            $currentValue[$key] = $value;
-
-            return;
-        }
+        $keyPath = self::keyToPathArray($key);
 
         $endKey = array_pop($keyPath);
-        for ($i = 0; $i < count($keyPath); $i++) {
-            $currentKey =& $keyPath[$i];
+        foreach ($keyPath as $currentKey) {
             if (!isset($currentValue[$currentKey])) {
                 $currentValue[$currentKey] = [];
             }
             if (!is_array($currentValue[$currentKey])) {
-                throw new DataException("Key path at $currentKey of $key cannot be indexed into (is not an array)");
+                throw new DataException(sprintf('Key path "%s" within "%s" cannot be indexed into (is not an array)', $currentKey, self::formatPath($key)));
             }
             $currentValue =& $currentValue[$currentKey];
         }
@@ -115,17 +97,10 @@ class Data implements DataInterface, ArrayAccess
     public function remove(string $key): void
     {
         $currentValue =& $this->data;
-        $keyPath = $this->keyToPathArray($key);
-
-        if (1 == count($keyPath)) {
-            unset($currentValue[$key]);
-
-            return;
-        }
+        $keyPath = self::keyToPathArray($key);
 
         $endKey = array_pop($keyPath);
-        for ($i = 0; $i < count($keyPath); $i++) {
-            $currentKey =& $keyPath[$i];
+        foreach ($keyPath as $currentKey) {
             if (!isset($currentValue[$currentKey])) {
                 return;
             }
@@ -142,10 +117,9 @@ class Data implements DataInterface, ArrayAccess
     public function get(string $key, $default = null)
     {
         $currentValue = $this->data;
-        $keyPath = $this->keyToPathArray($key);
+        $keyPath = self::keyToPathArray($key);
 
-        for ($i = 0; $i < count($keyPath); $i++) {
-            $currentKey = $keyPath[$i];
+        foreach ($keyPath as $currentKey) {
             if (!isset($currentValue[$currentKey])) {
                 return $default;
             }
@@ -166,10 +140,8 @@ class Data implements DataInterface, ArrayAccess
     public function has(string $key): bool
     {
         $currentValue = &$this->data;
-        $keyPath = $this->keyToPathArray($key);
 
-        for ($i = 0; $i < count($keyPath); $i++) {
-            $currentKey = $keyPath[$i];
+        foreach (self::keyToPathArray($key) as $currentKey) {
             if (
                 !is_array($currentValue) ||
                 !array_key_exists($currentKey, $currentValue)
@@ -194,7 +166,7 @@ class Data implements DataInterface, ArrayAccess
             return new Data($value);
         }
 
-        throw new DataException("Value at '$key' could not be represented as a DataInterface");
+        throw new DataException(sprintf('Value at "%s" could not be represented as a DataInterface', self::formatPath($key)));
     }
 
     /**
@@ -258,13 +230,15 @@ class Data implements DataInterface, ArrayAccess
     }
 
     /**
+     * @param string $path
+     *
      * @return string[]
      *
      * @psalm-return non-empty-list<string>
      *
      * @psalm-pure
      */
-    protected function keyToPathArray(string $path): array
+    protected static function keyToPathArray(string $path): array
     {
         if (\strlen($path) === 0) {
             throw new InvalidPathException('Path cannot be an empty string');
@@ -273,5 +247,21 @@ class Data implements DataInterface, ArrayAccess
         $path = \str_replace(self::DELIMITERS, '.', $path);
 
         return \explode('.', $path);
+    }
+
+    /**
+     * @param string|string[] $path
+     *
+     * @return string
+     *
+     * @psalm-pure
+     */
+    protected static function formatPath($path): string
+    {
+        if (is_string($path)) {
+            $path = self::keyToPathArray($path);
+        }
+
+        return implode(' » ', $path);
     }
 }
