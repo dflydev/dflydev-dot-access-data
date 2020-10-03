@@ -47,7 +47,7 @@ class Util
             return array_merge($to, $from);
         }
 
-        if (is_array($from)) {
+        if (is_array($from) && is_array($to)) {
             foreach ($from as $k => $v) {
                 if (!isset($to[$k])) {
                     $to[$k] = $v;

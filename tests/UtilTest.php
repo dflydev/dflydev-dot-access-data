@@ -126,13 +126,13 @@ class UtilTest extends TestCase
             [
                 'Arrays should be merged/appended (when using MERGE)',
                 // to
-                ['a' => 1, 'b' => 1, 'n' => [1]],
+                ['a' => 1, 'b' => 1, 'n' => [1], 'x' => 'string', 'y' => ['stringindex' => 1]],
                 // from
-                ['a' => 2, 'c' => 2, 'n' => [2]],
+                ['a' => 2, 'c' => 2, 'n' => [2], 'x' => ['array'], 'y' => [2]],
                 // mode
                 DataInterface::MERGE,
                 // expected result
-                ['a' => 2, 'b' => 1, 'c' => 2, 'n' => [1, 2]]
+                ['a' => 2, 'b' => 1, 'c' => 2, 'n' => [1, 2], 'x' => ['array'], 'y' => ['stringindex' => 1, 0 => 2]]
             ],
         ];
     }
