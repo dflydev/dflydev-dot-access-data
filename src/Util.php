@@ -35,26 +35,42 @@ class Util
      *
      * @param mixed $to
      * @param mixed $from
-     * @param bool  $clobber
+     * @param DataInterface::PRESERVE|DataInterface::REPLACE|DataInterface::MERGE $mode
      *
      * @return mixed
      *
      * @psalm-pure
      */
-    public static function mergeAssocArray($to, $from, $clobber = true)
+    public static function mergeAssocArray($to, $from, int $mode = DataInterface::REPLACE)
     {
+        if ($mode === DataInterface::MERGE && self::isList($to) && self::isList($from)) {
+            return array_merge($to, $from);
+        }
+
         if (is_array($from)) {
             foreach ($from as $k => $v) {
                 if (!isset($to[$k])) {
                     $to[$k] = $v;
                 } else {
-                    $to[$k] = self::mergeAssocArray($to[$k], $v, $clobber);
+                    $to[$k] = self::mergeAssocArray($to[$k], $v, $mode);
                 }
             }
 
             return $to;
         }
 
-        return $clobber ? $from : $to;
+        return $mode === DataInterface::PRESERVE ? $to : $from;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return bool
+     *
+     * @psalm-pure
+     */
+    private static function isList($value): bool
+    {
+        return is_array($value) && array_values($value) === $value;
     }
 }

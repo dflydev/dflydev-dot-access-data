@@ -200,17 +200,17 @@ class Data implements DataInterface, ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function import(array $data, bool $clobber = true): void
+    public function import(array $data, int $mode = self::REPLACE): void
     {
-        $this->data = Util::mergeAssocArray($this->data, $data, $clobber);
+        $this->data = Util::mergeAssocArray($this->data, $data, $mode);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function importData(DataInterface $data, bool $clobber = true): void
+    public function importData(DataInterface $data, int $mode = self::REPLACE): void
     {
-        $this->import($data->export(), $clobber);
+        $this->import($data->export(), $mode);
     }
 
     /**

@@ -25,9 +25,14 @@ class UtilTest extends TestCase
     /**
      * @dataProvider mergeAssocArrayProvider
      */
-    public function testMergeAssocArray($message, $to, $from, $clobber, $expectedResult)
+    public function testMergeAssocArray($message, $to, $from, $mode, $expectedResult)
     {
-        $result = Util::mergeAssocArray($to, $from, $clobber);
+        if ($mode === null) {
+            $result = Util::mergeAssocArray($to, $from);
+        } else {
+            $result = Util::mergeAssocArray($to, $from, $mode);
+        }
+
         $this->assertEquals($expectedResult, $result, $message);
     }
 
@@ -35,49 +40,49 @@ class UtilTest extends TestCase
     {
         return [
             [
-                'Clobber should replace to value with from value for strings (shallow)',
+                'Overwrite should replace to value with from value for strings (shallow)',
                 // to
                 ['a' => 'A'],
                 // from
                 ['a' => 'B'],
-                // clobber
-                true,
+                // mode
+                DataInterface::REPLACE,
                 // expected result
                 ['a' => 'B'],
             ],
 
             [
-                'Clobber should replace to value with from value for strings (deep)',
+                'Overwrite should replace to value with from value for strings (deep)',
                 // to
                 ['a' => ['b' => 'B']],
                 // from
                 ['a' => ['b' => 'C']],
-                // clobber
-                true,
+                // mode
+                DataInterface::REPLACE,
                 // expected result
                 ['a' => ['b' => 'C']]
             ],
 
             [
-                'Clobber should  NOTreplace to value with from value for strings (shallow)',
+                'Existing values are not replaced in preserve mode (shallow)',
                 // to
                 ['a' => 'A'],
                 // from
                 ['a' => 'B'],
-                // clobber
-                false,
+                // mode
+                DataInterface::PRESERVE,
                 // expected result
                 ['a' => 'A'],
             ],
 
             [
-                'Clobber should NOT replace to value with from value for strings (deep)',
+                'Existing values are not replaced in preserve mode (deep)',
                 // to
                 ['a' => ['b' => 'B']],
                 // from
                 ['a' => ['b' => 'C']],
-                // clobber
-                false,
+                // mode
+                DataInterface::PRESERVE,
                 // expected result
                 ['a' => ['b' => 'B']],
             ],
@@ -88,34 +93,46 @@ class UtilTest extends TestCase
                 ['a' => ['b' => 'B']],
                 // from
                 ['a' => ['c' => 'C']],
-                // clobber
+                // mode
                 null,
                 // expected result
                 ['a' => ['b' => 'B', 'c' => 'C']],
             ],
 
             [
-                'Arrays should be replaced (with clobber enabled)',
+                'Arrays should be replaced',
                 // to
                 ['a' => ['b', 'c']],
                 // from
                 ['a' => ['B', 'C']],
-                // clobber
-                true,
+                // mode
+                DataInterface::REPLACE,
                 // expected result
                 ['a' => ['B', 'C']],
             ],
 
             [
-                'Arrays should be NOT replaced (with clobber disabled)',
+                'Arrays should be preserved',
                 // to
                 ['a' => ['b', 'c']],
                 // from
                 ['a' => ['B', 'C']],
-                // clobber
-                false,
+                // mode
+                DataInterface::PRESERVE,
                 // expected result
                 ['a' => ['b', 'c']],
+            ],
+
+            [
+                'Arrays should be merged/appended (when using MERGE)',
+                // to
+                ['a' => 1, 'b' => 1, 'n' => [1]],
+                // from
+                ['a' => 2, 'c' => 2, 'n' => [2]],
+                // mode
+                DataInterface::MERGE,
+                // expected result
+                ['a' => 2, 'b' => 1, 'c' => 2, 'n' => [1, 2]]
             ],
         ];
     }
