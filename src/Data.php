@@ -252,6 +252,7 @@ class Data implements DataInterface, ArrayAccess
 
         $path = \str_replace(self::DELIMITERS, '.', $path);
 
+        // @phpstan-ignore-next-line
         return \explode('.', $path);
     }
 
