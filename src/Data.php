@@ -124,7 +124,7 @@ class Data implements DataInterface, ArrayAccess
         $keyPath = self::keyToPathArray($key);
 
         foreach ($keyPath as $currentKey) {
-            if (!is_array($currentValue) || !isset($currentValue[$currentKey])) {
+            if (!is_array($currentValue) || !array_key_exists($currentKey, $currentValue)) {
                 if ($hasDefault) {
                     return $default;
                 }

@@ -44,6 +44,10 @@ class DataTest extends TestCase
             'i' => [
                 'j' => 'J',
             ],
+            'n' => null,
+            'n2' => [
+                'n' => null,
+            ],
         ];
     }
 
@@ -63,6 +67,8 @@ class DataTest extends TestCase
         $this->assertEquals($data->get('foo', 'default-value-1'), 'default-value-1', 'Return default value');
         $this->assertEquals($data->get('f.g.h.i', 'default-value-2'), 'default-value-2');
         $this->assertEquals($data->get('f/g/h/i', 'default-value-2'), 'default-value-2');
+        $this->assertNull($data->get('n'));
+        $this->assertNull($data->get('n2/n'));
 
         $this->expectException(InvalidPathException::class);
         $this->expectExceptionMessage('Path cannot be an empty string');
@@ -82,6 +88,8 @@ class DataTest extends TestCase
         $data->append('f/a', 'b');
         $data->append('h.i', 'I2');
         $data->append('i/k/l', 'L');
+        $data->append('n', 'N');
+        $data->append('n2/n', 'N');
 
         $this->assertEquals(['A', 'B'], $data->get('a'));
         $this->assertEquals(['c1', 'c2', 'c3', 'c4'], $data->get('c'));
@@ -92,6 +100,8 @@ class DataTest extends TestCase
         $this->assertEquals(['b'], $data->get('f.a'));
         $this->assertEquals(['I', 'I2'], $data->get('h.i'));
         $this->assertEquals(['L'], $data->get('i.k.l'));
+        $this->assertEquals(['N'], $data->get('n'));
+        $this->assertEquals(['N'], $data->get('n2/n'));
 
         $this->expectException(InvalidPathException::class);
         $this->expectExceptionMessage('Path cannot be an empty string');
@@ -115,6 +125,10 @@ class DataTest extends TestCase
         $this->assertEquals('C', $data->get('b.c'));
         $this->assertEquals('F', $data->get('d/e/f'));
         $this->assertEquals(['e' => ['f' => 'F', 'g' => 'G']], $data->get('d'));
+
+        $data->set('a', null);
+        $this->assertTrue($data->has('a'), 'Data should exist with a null value');
+        $this->assertNull($data->get('a'), 'Data should exist with a null value');
 
         $this->expectException(InvalidPathException::class);
         $this->expectExceptionMessage('Path cannot be an empty string');
@@ -143,8 +157,11 @@ class DataTest extends TestCase
         $data->remove('d.e.f');
         $data->remove('empty.path');
 
+        $this->assertFalse($data->has('a'));
         $this->assertNull($data->get('a', null));
+        $this->assertFalse($data->has('b/c'));
         $this->assertNull($data->get('b/c', null));
+        $this->assertFalse($data->has('b.d.d3'));
         $this->assertNull($data->get('b.d.d3', null));
         $this->assertNull(null);
         $this->assertEquals('D2', $data->get('b.d.d2'));
@@ -181,7 +198,7 @@ class DataTest extends TestCase
         $data = new Data($this->getSampleData());
 
         foreach (
-            ['a', 'i', 'b.d', 'b/d', 'f.g.h', 'f/g/h', 'h.i', 'h/i', 'b.d.d1', 'b/d/d1'] as $existentKey
+            ['a', 'i', 'b.d', 'b/d', 'f.g.h', 'f/g/h', 'h.i', 'h/i', 'b.d.d1', 'b/d/d1', 'n', 'n2/n'] as $existentKey
         ) {
             $this->assertTrue($data->has($existentKey));
         }
@@ -249,7 +266,7 @@ class DataTest extends TestCase
         $data = new Data($this->getSampleData());
 
         foreach (
-            ['a', 'i', 'b.d', 'b/d', 'f.g.h', 'f/g/h', 'h.i', 'h/i', 'b.d.d1', 'b/d/d1'] as $existentKey
+            ['a', 'i', 'b.d', 'b/d', 'f.g.h', 'f/g/h', 'h.i', 'h/i', 'b.d.d1', 'b/d/d1', 'n', 'n2/n'] as $existentKey
         ) {
             $this->assertTrue(isset($data[$existentKey]));
         }
@@ -282,6 +299,8 @@ class DataTest extends TestCase
         $this->assertNull($data['foo'], 'Foo should not exist');
         $this->assertNull($data['f.g.h.i']);
         $this->assertNull($data['f/g/h/i']);
+        $this->assertNull($data['n']);
+        $this->assertNull($data['n2/n']);
     }
 
     public function testOffsetSet()
@@ -295,12 +314,14 @@ class DataTest extends TestCase
         $data['a']   = 'A';
         $data['b/c'] = 'C';
         $data['d.e'] = ['f' => 'F', 'g' => 'G'];
+        $data['foo'] = null;
 
         $this->assertEquals('A', $data['a']);
         $this->assertEquals(['c' => 'C'], $data['b']);
         $this->assertEquals('C', $data['b.c']);
         $this->assertEquals('F', $data['d/e/f']);
         $this->assertEquals(['e' => ['f' => 'F', 'g' => 'G']], $data['d']);
+        $this->assertNull($data['foo']);
 
         $this->expectException(InvalidPathException::class);
         $this->expectExceptionMessage('Path cannot be an empty string');
@@ -323,6 +344,16 @@ class DataTest extends TestCase
         $this->assertNull($data['b/d/d3']);
         $this->assertNull(null);
         $this->assertEquals('D2', $data['b.d.d2']);
+
+        $this->assertTrue($data->has('n'));
+        $this->assertNull($data->get('n'));
+        unset($data['n']);
+        $this->assertFalse($data->has('n'));
+
+        $this->assertTrue($data->has('n2/n'));
+        $this->assertNull($data->get('n2/n'));
+        unset($data['n2/n']);
+        $this->assertFalse($data->has('n2/n'));
 
         $this->expectException(InvalidPathException::class);
         $this->expectExceptionMessage('Path cannot be an empty string');
