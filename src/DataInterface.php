@@ -18,6 +18,10 @@ use Dflydev\DotAccessData\Exception\InvalidPathException;
 
 interface DataInterface
 {
+    public const PRESERVE = 0;
+    public const REPLACE = 1;
+    public const MERGE = 2;
+
     /**
      * Append a value to a key (assumes key refers to an array value)
      *
@@ -103,18 +107,18 @@ interface DataInterface
     /**
      * Import data into existing data
      *
-     * @param array<string, mixed> $data
-     * @param bool                 $clobber
+     * @param array<string, mixed>                     $data
+     * @param self::PRESERVE|self::REPLACE|self::MERGE $mode
      */
-    public function import(array $data, bool $clobber = true): void;
+    public function import(array $data, int $mode = self::REPLACE): void;
 
     /**
      * Import data from an external data into existing data
      *
-     * @param DataInterface $data
-     * @param bool          $clobber
+     * @param DataInterface                            $data
+     * @param self::PRESERVE|self::REPLACE|self::MERGE $mode
      */
-    public function importData(DataInterface $data, bool $clobber = true): void;
+    public function importData(DataInterface $data, int $mode = self::REPLACE): void;
 
     /**
      * Export data as raw data
