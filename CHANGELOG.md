@@ -12,11 +12,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Added parameter and return types to everything; enabled strict type checks (#18)
  - Added new exception classes to better identify certain types of errors (#20)
  - `Data` now implements `ArrayAccess` (#17)
+ - Added ability to merge non-associative array values (#31, #32)
 
 ### Changed
  - All thrown exceptions are now instances or subclasses of `DataException` (#20)
  - Calling `get()` on a missing key path without providing a default will throw a `MissingPathException` instead of returning `null` (#29)
  - Bumped supported PHP versions to 7.1 - 8.x (#18)
+
+### Fixed
+ - Fixed incorrect merging of array values into string values (#32)
+ - Fixed `get()` method behaving as if keys with `null` values didn't exist
 
 ## [2.0.0] - 2017-12-21
 
