@@ -193,8 +193,8 @@ class DataTest extends TestCase
 
         // With a default parameter given:
         $this->assertSame('DEFAULT', $data->get('foo.bar', 'DEFAULT'));
-        $this->assertSame(false, $data->get('foo.bar', false));
-        $this->assertSame(null, $data->get('foo/bar', null));
+        $this->assertFalse($data->get('foo.bar', false));
+        $this->assertNull($data->get('foo/bar', null));
 
         // Without a default parameter:
         $this->expectException(DataException::class);
