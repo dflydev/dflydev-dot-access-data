@@ -38,6 +38,9 @@ jobs:
                     - php: '8.0'
                       coverage: false
                       composer-flags: '--ignore-platform-req=php'
+                    - php: '8.1'
+                      coverage: false
+                      composer-flags: '--ignore-platform-req=php'
 
         steps:
             - uses: actions/checkout@v2
@@ -51,9 +54,9 @@ jobs:
 
             - run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-            - name: "Use PHPUnit 9.3+ on PHP 8"
+            - name: "Use PHPUnit 9.3+ on PHP 8.0 & PHP 8.1"
               run: composer require --no-update --dev phpunit/phpunit:^9.3
-              if: "matrix.php == '8.0'"
+              if: "matrix.php == '8.0' || matrix.php == '8.1'"
 
             - run: composer update --no-progress ${{ matrix.composer-flags }}
 
