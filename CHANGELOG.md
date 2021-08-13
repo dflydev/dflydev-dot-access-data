@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.1] - 2021-08-13
+
+### Added
+
+ - Adds ReturnTypeWillChange to suppress PHP 8.1 warnings (#40)
+
 ## [3.0.0] - 2021-01-01
 
 ### Added
