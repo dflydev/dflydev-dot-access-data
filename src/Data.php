@@ -205,13 +205,15 @@ class Data implements DataInterface, ArrayAccess
      * {@inheritdoc}
      */
     #[\ReturnTypeWillChange]
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         return $this->has($key);
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return mixed
      */
     #[\ReturnTypeWillChange]
     public function offsetGet($key)
@@ -226,7 +228,7 @@ class Data implements DataInterface, ArrayAccess
      * @param mixed $value
      */
     #[\ReturnTypeWillChange]
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         $this->set($key, $value);
     }
@@ -235,7 +237,7 @@ class Data implements DataInterface, ArrayAccess
      * {@inheritdoc}
      */
     #[\ReturnTypeWillChange]
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         $this->remove($key);
     }
