@@ -203,6 +203,8 @@ class Data implements DataInterface, ArrayAccess
 
     /**
      * {@inheritdoc}
+     *
+     * @return bool
      */
     #[\ReturnTypeWillChange]
     public function offsetExists($key)
@@ -212,6 +214,8 @@ class Data implements DataInterface, ArrayAccess
 
     /**
      * {@inheritdoc}
+     *
+     * @return mixed
      */
     #[\ReturnTypeWillChange]
     public function offsetGet($key)
@@ -224,6 +228,8 @@ class Data implements DataInterface, ArrayAccess
      *
      * @param string $key
      * @param mixed $value
+     *
+     * @return void
      */
     #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
@@ -233,6 +239,8 @@ class Data implements DataInterface, ArrayAccess
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     #[\ReturnTypeWillChange]
     public function offsetUnset($key)
