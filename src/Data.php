@@ -207,7 +207,7 @@ class Data implements DataInterface, ArrayAccess
      * @return bool
      */
     #[\ReturnTypeWillChange]
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         return $this->has($key);
     }
@@ -232,7 +232,7 @@ class Data implements DataInterface, ArrayAccess
      * @return void
      */
     #[\ReturnTypeWillChange]
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         $this->set($key, $value);
     }
@@ -243,7 +243,7 @@ class Data implements DataInterface, ArrayAccess
      * @return void
      */
     #[\ReturnTypeWillChange]
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         $this->remove($key);
     }
