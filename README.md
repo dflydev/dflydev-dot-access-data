@@ -55,6 +55,10 @@ $data->get('some.path.that.does.not.exist', 'some-default-value');
 
 // throws a MissingPathException because no default was given
 $data->get('some.path.that.does.not.exist');
+
+// null (the default is only used when the path does not exist)
+$data = new Data(['setting' => null]);
+$data->get('setting', 'fallback');
 ```
 
 A more concrete example:

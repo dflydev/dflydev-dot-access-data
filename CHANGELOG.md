@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+ - `Data::get()` now returns `null` for existing null-valued keys instead of the supplied default.
+
 ## [3.0.3] - 2024-07-08
 
 ### Fixed

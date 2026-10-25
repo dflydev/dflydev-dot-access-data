@@ -63,7 +63,8 @@ interface DataInterface
      * Get the raw value for a key
      *
      * If the key does not exist, an optional default value can be returned instead.
-     * If no default is provided then an exception will be thrown instead.
+     * If the key exists and its value is null, null is returned.
+     * If the key does not exist and no default is provided, an exception is thrown.
      *
      * @param string $key
      * @param mixed $default

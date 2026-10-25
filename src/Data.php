@@ -135,7 +135,7 @@ class Data implements DataInterface, ArrayAccess
             $currentValue = $currentValue[$currentKey];
         }
 
-        return $currentValue === null ? $default : $currentValue;
+        return $currentValue;
     }
 
     /**

@@ -202,6 +202,21 @@ class DataTest extends TestCase
         $data->get('foo.bar');
     }
 
+    public function testGetReturnsNullForExistingNullValueWhenDefaultIsGiven()
+    {
+        $data = new Data([
+            'setting' => null,
+            'nested' => [
+                'setting' => null,
+            ],
+        ]);
+
+        $this->assertTrue($data->has('setting'));
+        $this->assertNull($data->get('setting', 'fallback'));
+        $this->assertNull($data->get('nested.setting', 'fallback'));
+        $this->assertSame('fallback', $data->get('missing', 'fallback'));
+    }
+
     public function testHas()
     {
         $data = new Data($this->getSampleData());
